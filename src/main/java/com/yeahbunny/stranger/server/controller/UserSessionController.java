@@ -1,6 +1,7 @@
 package com.yeahbunny.stranger.server.controller;
 
 
+import com.yeahbunny.stranger.server.controller.dto.response.LoginResponse;
 import com.yeahbunny.stranger.server.controller.dto.request.LoginRequest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -39,14 +40,16 @@ public class UserSessionController {
     )
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest userLoginRequest) {
+    public LoginResponse login(@RequestBody @Valid LoginRequest userLoginRequest) {
 
         LOG.debug("User logging in: {} {}", userLoginRequest.getLogin(),  userLoginRequest.getPassword());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLoginRequest.getLogin(), userLoginRequest.getPassword());
         Authentication a = authenticationManager.authenticate(token);
 
         SecurityContextHolder.getContext().setAuthentication(a);
-        return ResponseEntity.ok().body(RequestContextHolder.currentRequestAttributes().getSessionId());
+        LoginResponse response = new LoginResponse();
+        response.setToken(RequestContextHolder.currentRequestAttributes().getSessionId());
+        return response;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
