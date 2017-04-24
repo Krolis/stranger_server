@@ -1,15 +1,23 @@
 package com.yeahbunny.stranger.server.controller;
 
-import com.yeahbunny.stranger.server.controller.dto.response.MyTestResponse;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.yeahbunny.stranger.server.controller.dto.response.MyTestResponse;
+import com.yeahbunny.stranger.server.model.User;
+import com.yeahbunny.stranger.server.repositories.UserRepository;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 
 
@@ -18,7 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
-
+    
+    @Autowired
+    UserRepository userRepository;
 
     @ApiOperation(value = "Metoda testowa")
     @ApiResponses(value = {
@@ -29,7 +39,7 @@ public class TestController {
     public MyTestResponse testMethod(){
 
         LOG.debug("tiruriru log");
-        return new MyTestResponse(69,"hello world");
+        return new MyTestResponse(69,"hello world", new ArrayList<String>() {{ add("asd"); add("zxc");}});
     }
 
     @ApiOperation(value = "Metoda testowa, wymaga autoryzacji")
@@ -43,5 +53,21 @@ public class TestController {
 
         LOG.debug("zautoryzowany uzytkownik");
         return new MyTestResponse(12,"hello world zautentyfikowany uzytkowniku");
+    }
+    
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> getAllUsers(){
+    	User user1 = new User();
+    	user1.setName("user1");
+    	userRepository.save(user1);
+    	User user2 = new User();
+    	user2.setName("user2");
+    	userRepository.save(user2);
+    	List<User> users = new ArrayList<>();
+    	for(User dbUser : userRepository.findAll()) {
+    		users.add(dbUser);
+    	}
+    	return users;
     }
 }
