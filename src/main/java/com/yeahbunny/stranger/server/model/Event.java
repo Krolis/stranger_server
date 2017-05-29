@@ -20,7 +20,7 @@ public class Event implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_event")
-	private int idEvent;
+	private long idEvent;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="date_end")
@@ -57,11 +57,11 @@ public class Event implements Serializable {
 	public Event() {
 	}
 
-	public int getIdEvent() {
+	public long getIdEvent() {
 		return this.idEvent;
 	}
 
-	public void setIdEvent(int idEvent) {
+	public void setIdEvent(long idEvent) {
 		this.idEvent = idEvent;
 	}
 

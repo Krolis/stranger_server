@@ -42,7 +42,6 @@ public class UserSessionController {
     @ResponseBody
     public LoginResponse login(@RequestBody @Valid LoginRequest userLoginRequest) {
 
-        LOG.debug("User logging in: {} {}", userLoginRequest.getLogin(),  userLoginRequest.getPassword());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLoginRequest.getLogin(), userLoginRequest.getPassword());
         Authentication a = authenticationManager.authenticate(token);
 

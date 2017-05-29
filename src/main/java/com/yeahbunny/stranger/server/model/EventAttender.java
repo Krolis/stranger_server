@@ -22,14 +22,16 @@ public class EventAttender implements Serializable {
 	private int rating;
 
 	//bi-directional many-to-one association to Event
-//	@ManyToOne
-//	@JoinColumn(name="id_event")
-//	private Event event;
+	@ManyToOne
+	@JoinColumn(name="id_event")
+	@MapsId("idEvent")
+	private Event event;
 
 	//bi-directional many-to-one association to User
-//	@ManyToOne
-//	@JoinColumn(name="id_user")
-//	private User user;
+	@ManyToOne
+	@MapsId("idUser")
+	@JoinColumn(name="id_user")
+	private User user;
 
 	public EventAttender() {
 	}

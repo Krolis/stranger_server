@@ -19,7 +19,7 @@ public class StrangerUser {
 	    	if ("F".equals(user.getGender()))
 	    		female = true;
 	    	else female = false;
-	    	photoUrl = null; // TODO
+	    	photoUrl = user.getPhotoUrl(); // TODO
     	}
     }
     

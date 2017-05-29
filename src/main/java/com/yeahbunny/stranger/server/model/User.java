@@ -32,6 +32,8 @@ public class User implements Serializable {
 	private String name;
 
 	private String surname;
+	
+	private String photoUrl;
 
 	//bi-directional many-to-one association to Event
 	@OneToMany(mappedBy="user")
@@ -106,6 +108,14 @@ public class User implements Serializable {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+	
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 
 	public Set<Event> getEvents() {

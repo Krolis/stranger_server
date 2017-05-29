@@ -13,23 +13,23 @@ public class EventAttenderPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="id_event", insertable=false, updatable=false)
-	private int idEvent;
+	private long idEvent;
 
 	@Column(name="id_user", insertable=false, updatable=false)
-	private int idUser;
+	private long idUser;
 
 	public EventAttenderPK() {
 	}
-	public int getIdEvent() {
+	public long getIdEvent() {
 		return this.idEvent;
 	}
-	public void setIdEvent(int idEvent) {
+	public void setIdEvent(long idEvent) {
 		this.idEvent = idEvent;
 	}
-	public int getIdUser() {
+	public long getIdUser() {
 		return this.idUser;
 	}
-	public void setIdUser(int idUser) {
+	public void setIdUser(long idUser) {
 		this.idUser = idUser;
 	}
 
@@ -49,8 +49,8 @@ public class EventAttenderPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + this.idEvent;
-		hash = hash * prime + this.idUser;
+		hash = hash * prime + Long.hashCode(this.idEvent);
+		hash = hash * prime + Long.hashCode(this.idUser);
 		
 		return hash;
 	}
