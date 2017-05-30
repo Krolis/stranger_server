@@ -33,7 +33,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger**").permitAll()
                     .antMatchers("/user/session/**").permitAll()
-                .antMatchers("/user/myEvents").denyAll() //.hasAuthority(AppRoles.USER)
+                .antMatchers("/user/myEvents").hasAuthority(AppRoles.USER)
 
                 .anyRequest().hasAuthority(AppRoles.USER)//.permitAll()//to trzeba wykosic
                 .and()
