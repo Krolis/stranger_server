@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -21,9 +23,10 @@ public class MyEventsController {
 
     @RequestMapping(value = "/user/myEvents", method = RequestMethod.GET)
     @ResponseBody
-    public List<StrangersEventListItem> getMyEvents(){
+    public List<StrangersEventListItem> getMyEvents(HttpServletRequest request){
         List<StrangersEventListItem> mockEvents = new ArrayList<>();
-
+Enumeration<String> temp = request.getHeaderNames();
+        String token = request.getHeader("X-Auth-Token");
         StrangersEventListItem strangersEventMarker1 = new StrangersEventListItem();
         strangersEventMarker1.setId(1);
         strangersEventMarker1.setTitle("Spotkanie zespołu Strangers");

@@ -24,7 +24,7 @@ PersonEntity entity = userRepository.findByEmail(login);
         }*/
 
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority("USER"));
+        roles.add(new SimpleGrantedAuthority(AppRoles.USER));
         return new CustomUserDetails((long)1,login, "asd", roles);
     }
 }
