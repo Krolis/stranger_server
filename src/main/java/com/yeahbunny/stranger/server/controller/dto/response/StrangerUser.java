@@ -1,12 +1,28 @@
 package com.yeahbunny.stranger.server.controller.dto.response;
 
+import com.yeahbunny.stranger.server.model.User;
+
 public class StrangerUser {
     private long id;
     private String nick;
     private int age;
     private boolean female;
     private String photoUrl;
+    
+    public StrangerUser() {};
 
+    public StrangerUser(User user) {
+    	if (user != null) {
+	    	this.id = user.getIdUser();
+	    	this.nick = user.getLogin();
+	    	this.age = user.getAge();
+	    	if ("F".equals(user.getGender()))
+	    		female = true;
+	    	else female = false;
+	    	photoUrl = user.getPhotoUrl(); // TODO
+    	}
+    }
+    
     public void setId(long id) {
         this.id = id;
     }

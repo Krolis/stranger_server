@@ -7,21 +7,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.yeahbunny.stranger.server.model.User;
+import com.yeahbunny.stranger.server.services.UserService;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
+	@Inject
+	UserService userService;
+
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-/*
-        tak będzieee
-PersonEntity entity = userRepository.findByEmail(login);
-
-        if(entity == null){
-            throw new UsernameNotFoundException("USER_NOT_FOUND");
-        }*/
+    	User user = userService.findUserByUsername(login);
+    	if (user == null)
+    		throw new UsernameNotFoundException("USER_NOT_FOUND");
 
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(AppRoles.USER));
