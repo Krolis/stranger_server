@@ -33,8 +33,6 @@ public class MyUserController {
     	User user = userService.findUserByUsername(username);
     	
         StrangerUser eventOwner = new StrangerUser(user);
-        // TODO - obsługa photo
-        eventOwner.setPhotoUrl("https://scontent.fwaw3-1.fna.fbcdn.net/v/t1.0-0/s160x160/14117713_1040333702710708_7798235088864788788_n.jpg?oh=e309c504c7786a3f94e29b74da172ec5&oe=59B5945D");
         return eventOwner;
     }
     
@@ -49,7 +47,7 @@ public class MyUserController {
     	User user = userService.findUserByUsername(username);
     	
         StrangerUser eventOwner = new StrangerUser(user);
-         return eventOwner;
+        return eventOwner;
     }
     
 }

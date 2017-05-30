@@ -4,6 +4,8 @@ import com.yeahbunny.stranger.server.controller.dto.response.EventMessage;
 import com.yeahbunny.stranger.server.controller.dto.response.LatLng;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangerUser;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,7 @@ public class EventController {
     @RequestMapping(value = "/event", method = RequestMethod.GET)
     @ResponseBody
     public StrangersEvent getEvent(@RequestParam long id){
+    	
         StrangersEvent event= new StrangersEvent();
         event.setId(id);
         event.setPosition(new LatLng(50.064375, 19.939535));
@@ -88,4 +91,12 @@ public class EventController {
 
         return event;
     }
+    
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<StrangersEvent> getEvents(){
+    	
+    	return null;
+    }
+    
 }
