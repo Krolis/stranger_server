@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.yeahbunny.stranger.server.controller.dto.response.EventType;
+
 
 /**
  * The persistent class for the event database table.
@@ -36,6 +38,12 @@ public class Event implements Serializable {
 
 	@Column(name="max_attenders")
 	private int maxAttenders;
+	
+	@Column(name="title")
+	private String title;
+	
+	@Column(name="details")
+	private String details;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -55,6 +63,17 @@ public class Event implements Serializable {
 	private Set<Report> reports;
 
 	public Event() {
+	}
+	
+	public EventType checkEventType() {
+    	Date curDate = new Date();
+    	// TODO - obsługa braków dat?? - not nulle w bazie
+    	if (curDate.before(dateStart))
+    		return EventType.FUTURE;
+    	else if (curDate.before(dateEnd))
+			return EventType.NOW;
+    	else
+    		return EventType.HISTORIC;
 	}
 
 	public long getIdEvent() {
@@ -103,6 +122,22 @@ public class Event implements Serializable {
 
 	public void setMaxAttenders(int maxAttenders) {
 		this.maxAttenders = maxAttenders;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public User getUser() {

@@ -19,6 +19,7 @@ import com.yeahbunny.stranger.server.services.UserService;
 
 @Controller
 public class UserController {
+	
 	@Inject
 	UserService userService;
 	

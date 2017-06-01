@@ -1,9 +1,10 @@
 package com.yeahbunny.stranger.server.controller.dto.response;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class StrangersEventMarker {
+import com.yeahbunny.stranger.server.model.Event;
+
+public class StrangersPlainEvent {
     private Long id;
     private EventType type;
     private LatLng position;
@@ -11,7 +12,21 @@ public class StrangersEventMarker {
     private String details;
     private GregorianCalendar date;
 
-    public Long getId() {
+    public StrangersPlainEvent() {
+    	this.date = new GregorianCalendar();
+    }
+    
+    public StrangersPlainEvent(Event event) {
+    	this();
+    	this.id = event.getIdEvent();
+    	this.position = new LatLng(event.getLatitude(), event.getLongitude());
+    	this.title = event.getTitle();
+    	this.details = event.getDetails();
+    	this.date.setTime(event.getDateStart());
+    	this.type = event.checkEventType();
+    }
+
+	public Long getId() {
         return id;
     }
 

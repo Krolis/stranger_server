@@ -1,9 +1,10 @@
 package com.yeahbunny.stranger.server.controller;
 
-import com.yeahbunny.stranger.server.controller.dto.response.EventMessage;
-import com.yeahbunny.stranger.server.controller.dto.response.LatLng;
-import com.yeahbunny.stranger.server.controller.dto.response.StrangerUser;
-import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,15 +13,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import com.yeahbunny.stranger.server.controller.dto.response.EventMessage;
+import com.yeahbunny.stranger.server.controller.dto.response.LatLng;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangerUser;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
+import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.services.EventService;
 
 /**
  * Created by kroli on 27.05.2017.
  */
 @Controller
 public class EventController {
+	
+	@Inject
+	EventService eventService;
 
     @RequestMapping(value = "/event", method = RequestMethod.GET)
     @ResponseBody
@@ -92,11 +100,24 @@ public class EventController {
         return event;
     }
     
+
+    
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<StrangersEvent> getEvents(){
-    	
-    	return null;
+    public ResponseEntity<List<StrangersPlainEvent>> getEvents(@RequestParam double northeast_lat,
+                                                @RequestParam double northeast_lng,
+                                                @RequestParam double southwest_lat,
+                                                @RequestParam double southwest_lng){
+    	// TODO - obsługa parametrów
+        List<StrangersPlainEvent> plainEvents = new ArrayList<>();
+
+        List<Event> modelEvents = eventService.findAllEventsLazy();
+        
+        for (Event event : modelEvents) {
+        	plainEvents.add(new StrangersPlainEvent(event));
+        }
+
+        return ResponseEntity.ok(plainEvents);
     }
     
 }

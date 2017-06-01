@@ -1,17 +1,15 @@
 package com.yeahbunny.stranger.server.controller;
 
-import com.yeahbunny.stranger.server.controller.dto.response.EventType;
-import com.yeahbunny.stranger.server.controller.dto.response.LatLng;
-import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventListItem;
-import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventMarker;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventListItem;
 
 /**
  * Created by kroli on 27.05.2017.
