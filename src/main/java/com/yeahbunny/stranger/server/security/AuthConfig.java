@@ -32,7 +32,10 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger**").permitAll()
-                .anyRequest().permitAll()//to trzeba wykosic
+                    .antMatchers("/user/session/**").permitAll()
+                .antMatchers("/user/myEvents").hasAuthority(AppRoles.USER)
+
+                .anyRequest().hasAuthority(AppRoles.USER)//.permitAll()//to trzeba wykosic
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(getNotAuthorizedEntryPoint())

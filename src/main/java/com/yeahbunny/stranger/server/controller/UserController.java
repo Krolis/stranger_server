@@ -32,17 +32,4 @@ public class UserController {
     	else 
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    @ResponseBody
-    // TODO - czy ktoś może pobrać wszystkich userów???
-    public List<StrangerUser> getAllUsers(){
-    	List<User> modelUsers = userService.findAllUsers();
-        List<StrangerUser> responseUsers = new ArrayList<>();
-        for (User modelUser : modelUsers) {
-        	StrangerUser responseUser = new StrangerUser(modelUser);
-        	responseUsers.add(responseUser);
-        }
-        return responseUsers;
-    }
 }
