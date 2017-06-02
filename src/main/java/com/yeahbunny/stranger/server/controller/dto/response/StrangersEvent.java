@@ -2,8 +2,13 @@ package com.yeahbunny.stranger.server.controller.dto.response;
 
 
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.model.EventAttender;
+import com.yeahbunny.stranger.server.model.EventMessage;
 
 public class StrangersEvent {
     private Long id;
@@ -13,10 +18,34 @@ public class StrangersEvent {
     private String details;
     private GregorianCalendar date;
     private List<StrangerUser> attenders;
-    private List<EventMessage> messages;
+    private List<StrangerEventMessage> messages;
     private String where;
     private StrangerUser owner;
 
+    public StrangersEvent() {
+    	date = new GregorianCalendar();
+    	attenders = new ArrayList<>();
+    	messages = new ArrayList<>();
+    }
+    
+    public StrangersEvent(Event event) {
+    	this();
+    	this.id = event.getIdEvent();
+    	this.position = new LatLng(event.getLatitude(), event.getLongitude());
+    	this.title = event.getTitle();
+    	this.details = event.getDetails();
+    	this.date.setTime(event.getDateStart());
+    	this.type = event.checkEventType();
+    	for (EventAttender evAttender : event.getEventAttenders()) {
+    		this.attenders.add(new StrangerUser(evAttender.getUser()));
+    	}
+    	for(EventMessage evMessage : event.getEventMessages()) {
+    		this.messages.add(new StrangerEventMessage(evMessage));
+    	}
+    	this.owner = new StrangerUser(event.getCreator());
+    	// TODO - where
+    }
+    
     public Long getId() {
         return id;
     }
@@ -73,11 +102,11 @@ public class StrangersEvent {
         this.attenders = attenders;
     }
 
-    public List<EventMessage> getMessages() {
+    public List<StrangerEventMessage> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<EventMessage> messages) {
+    public void setMessages(List<StrangerEventMessage> messages) {
         this.messages = messages;
     }
 

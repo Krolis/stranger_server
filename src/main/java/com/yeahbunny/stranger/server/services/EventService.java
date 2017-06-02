@@ -17,5 +17,24 @@ public interface EventService {
 	 */
 	public List<Event> findAllEventsLazy();
 	
-	public Event findEventById(long id);
+	/**
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	public Event findEventById(long eventId);
+
+	/**
+	 * 
+	 * @param id
+	 * @return Event with eagerly loaded children entities
+	 */
+	Event findEventByIdEagerly(long id);
+
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	List<Event> findEventsCreatedByUser(String username);
 }

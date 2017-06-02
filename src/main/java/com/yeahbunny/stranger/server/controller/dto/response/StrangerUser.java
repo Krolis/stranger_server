@@ -15,7 +15,7 @@ public class StrangerUser {
     	if (user != null) {
 	    	this.id = user.getIdUser();
 	    	this.nick = user.getLogin();
-	    	this.age = user.getAge();
+	    	this.age = user.calculateAge();
 	    	if ("F".equals(user.getGender()))
 	    		female = true;
 	    	else female = false;
@@ -23,7 +23,7 @@ public class StrangerUser {
     	}
     }
     
-    public void setId(long id) {
+	public void setId(long id) {
         this.id = id;
     }
 
