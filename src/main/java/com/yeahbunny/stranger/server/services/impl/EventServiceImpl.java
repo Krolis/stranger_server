@@ -62,4 +62,10 @@ public class EventServiceImpl implements EventService {
 		events.addAll(creator.getEvents());
 		return events;
 	}
+
+	@Override
+	public Long save(Event event) {
+		Event saved = eventRepo.save(event);
+		return saved.getIdEvent();
+	}
 }
