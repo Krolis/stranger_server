@@ -1,9 +1,5 @@
 package com.yeahbunny.stranger.server.controller.dto.response;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import com.yeahbunny.stranger.server.model.User;
 
 public class StrangerUser {
@@ -19,38 +15,12 @@ public class StrangerUser {
     	if (user != null) {
 	    	this.id = user.getIdUser();
 	    	this.nick = user.getLogin();
-	    	this.age = calculateAge(user.getBirthdate());
+	    	this.age = user.calculateAge();
 	    	if ("F".equals(user.getGender()))
 	    		female = true;
 	    	else female = false;
 	    	photoUrl = user.getPhotoUrl();
     	}
-    }
-    
-    private int calculateAge(Date birthdate) {
-    	int age = 0;
-    	try {
-    		age = getDiffYears(new Date(), birthdate);
-    	} catch (Exception e) {
-    		
-    	}
-		return age;
-	}
-
-    private int getDiffYears(Date first, Date last) {
-        Calendar a = getCalendar(first);
-        Calendar b = getCalendar(last);
-        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
-        if (a.get(Calendar.DAY_OF_YEAR) > b.get(Calendar.DAY_OF_YEAR)) {
-            diff--;
-        }
-        return diff;
-    }
-    
-    private Calendar getCalendar(Date date) {
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTime(date);
-        return cal;
     }
     
 	public void setId(long id) {

@@ -1,7 +1,9 @@
 package com.yeahbunny.stranger.server.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -224,4 +226,30 @@ public class User implements Serializable {
 		return report;
 	}
 
+    public int calculateAge() {
+    	int age = 0;
+    	try {
+    		age = getDiffYears(birthdate, new Date());
+    	} catch (Exception e) {
+    		
+    	}
+		return age;
+	}
+
+    private int getDiffYears(Date first, Date last) {
+        Calendar a = getCalendar(first);
+        Calendar b = getCalendar(last);
+        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+        if (a.get(Calendar.DAY_OF_YEAR) > b.get(Calendar.DAY_OF_YEAR)) {
+            diff--;
+        }
+        return diff;
+    }
+    
+    private Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTime(date);
+        return cal;
+    }
+	
 }
