@@ -60,8 +60,8 @@ public class User implements Serializable {
 	private Set<Event> events;
 
 	//bi-directional many-to-one association to EventAttender
-	//@OneToMany(mappedBy="user")
-//	private Set<EventAttender> eventAttenders;
+	@OneToMany(mappedBy="user")
+	private Set<EventAttender> eventAttenders;
 
 	//bi-directional many-to-one association to EventMessage
 	@OneToMany(mappedBy="user")
@@ -72,6 +72,17 @@ public class User implements Serializable {
 	private Set<Report> reports;
 
 	public User() {
+	}
+
+	public User(String login, String hashedPw, boolean isFemale, Date birthdate) {
+		super();
+		this.login = login;
+		this.hashedPw = hashedPw;
+		this.birthdate = birthdate;
+		if (isFemale)
+			this.gender = "F";
+		else
+			this.gender = "M";
 	}
 
 	public Long getIdUser() {
@@ -159,7 +170,7 @@ public class User implements Serializable {
 
 		return event;
 	}
-/*
+
 	public Set<EventAttender> getEventAttenders() {
 		return this.eventAttenders;
 	}
@@ -181,7 +192,7 @@ public class User implements Serializable {
 
 		return eventAttender;
 	}
-*/
+
 	public Set<EventMessage> getEventMessages() {
 		return this.eventMessages;
 	}

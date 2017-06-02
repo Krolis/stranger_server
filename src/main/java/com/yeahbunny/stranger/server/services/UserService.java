@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.services;
 
 import java.util.List;
 
+import com.yeahbunny.stranger.server.exception.UserExistsException;
 import com.yeahbunny.stranger.server.model.User;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
 	public User findUserById(long id);
 	
 	public User findUserByUsername(String username);
+	
+	public User addNewUser(User newUser) throws UserExistsException;
 }

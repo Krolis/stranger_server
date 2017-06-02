@@ -34,6 +34,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/swagger-resources/configuration/ui").permitAll()
 
                 .antMatchers("/user/session/**").permitAll()
+                .antMatchers("/register").permitAll()
                 .antMatchers("/user/myEvents").hasAuthority(AppRoles.USER)
 
                     .antMatchers("/photo/*").permitAll()

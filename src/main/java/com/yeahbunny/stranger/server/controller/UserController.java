@@ -1,8 +1,5 @@
 package com.yeahbunny.stranger.server.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
@@ -22,7 +19,7 @@ public class UserController {
 	
 	@Inject
 	UserService userService;
-	
+	// TODO - zasób users - obecnie zwraca wszystkie dane !!!!!
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<StrangerUser> getUser(@PathVariable long userId){
