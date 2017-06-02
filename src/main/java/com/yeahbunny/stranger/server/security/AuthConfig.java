@@ -30,12 +30,15 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/test/403").authenticated()
                 .antMatchers("/test/**").permitAll()
-                .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/swagger**").permitAll()
-                    .antMatchers("/user/session/**").permitAll()
+                    .antMatchers("/v2/api-docs").permitAll()
+                    .antMatchers("/swagger**").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
+                    .antMatchers("/swagger-resources/configuration/ui").permitAll()
+
+                .antMatchers("/user/session/**").permitAll()
                 .antMatchers("/user/myEvents").hasAuthority(AppRoles.USER)
 
-                .anyRequest().hasAuthority(AppRoles.USER)//.permitAll()//to trzeba wykosic
+                .anyRequest().hasAuthority(AppRoles.USER)
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(getNotAuthorizedEntryPoint())

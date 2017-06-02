@@ -16,10 +16,14 @@ import com.yeahbunny.stranger.server.controller.dto.response.EventType;
 import com.yeahbunny.stranger.server.controller.dto.response.LatLng;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 
+/**
+ * DO WYWALENIA TA KLASA CAŁA CHYBA CNIE
+ */
 @Controller
 public class MarkerController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MarkerController.class);
+
 
     @RequestMapping(value = "markers", method = RequestMethod.GET)
     @ResponseBody
