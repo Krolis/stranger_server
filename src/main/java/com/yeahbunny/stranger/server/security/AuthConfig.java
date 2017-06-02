@@ -36,6 +36,8 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/session/**").permitAll()
                 .antMatchers("/user/myEvents").hasAuthority(AppRoles.USER)
 
+                    .antMatchers("/photo/*").permitAll()
+
                 .anyRequest().hasAuthority(AppRoles.USER)
                 .and()
                 .exceptionHandling()
