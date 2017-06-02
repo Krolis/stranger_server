@@ -22,7 +22,7 @@ public class Event implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_event")
-	private long idEvent;
+	private Long idEvent;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="date_end")
@@ -32,9 +32,9 @@ public class Event implements Serializable {
 	@Column(name="date_start")
 	private Date dateStart;
 
-	private double latitude;
+	private Double latitude;
 
-	private double longitude;
+	private Double longitude;
 
 	@Column(name="max_attenders")
 	private int maxAttenders;
@@ -48,11 +48,11 @@ public class Event implements Serializable {
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="id_user_organizer")
-	private User user;
+	private User creator;
 
 	//bi-directional many-to-one association to EventAttender
-//	@OneToMany(mappedBy="event")
-//	private Set<EventAttender> eventAttenders;
+	@OneToMany(mappedBy="event")
+	private Set<EventAttender> eventAttenders;
 
 	//bi-directional many-to-one association to EventMessage
 	@OneToMany(mappedBy="event")
@@ -76,11 +76,11 @@ public class Event implements Serializable {
     		return EventType.HISTORIC;
 	}
 
-	public long getIdEvent() {
+	public Long getIdEvent() {
 		return this.idEvent;
 	}
 
-	public void setIdEvent(long idEvent) {
+	public void setIdEvent(Long idEvent) {
 		this.idEvent = idEvent;
 	}
 
@@ -100,27 +100,27 @@ public class Event implements Serializable {
 		this.dateStart = dateStart;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
 		return this.latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public Double getLongitude() {
 		return this.longitude;
 	}
 
-	public void setLongitude(double longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
-	public int getMaxAttenders() {
+	public Integer getMaxAttenders() {
 		return this.maxAttenders;
 	}
 
-	public void setMaxAttenders(int maxAttenders) {
+	public void setMaxAttenders(Integer maxAttenders) {
 		this.maxAttenders = maxAttenders;
 	}
 
@@ -140,14 +140,14 @@ public class Event implements Serializable {
 		this.details = details;
 	}
 
-	public User getUser() {
-		return this.user;
+	public User getCreator() {
+		return this.creator;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
-/*
+
 	public Set<EventAttender> getEventAttenders() {
 		return this.eventAttenders;
 	}
@@ -169,7 +169,7 @@ public class Event implements Serializable {
 
 		return eventAttender;
 	}
-*/
+
 	public Set<EventMessage> getEventMessages() {
 		return this.eventMessages;
 	}

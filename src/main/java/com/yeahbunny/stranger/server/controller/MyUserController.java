@@ -13,6 +13,7 @@ import com.yeahbunny.stranger.server.controller.dto.response.StrangerUser;
 import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.security.CustomUserDetails;
 import com.yeahbunny.stranger.server.services.UserService;
+import com.yeahbunny.stranger.server.utils.AuthUtils;
 
 /**
  * Created by kroli on 27.05.2017.
@@ -28,7 +29,7 @@ public class MyUserController {
     @PreAuthorize("isAuthenticated()")
     public StrangerUser getMyUser(){
     	
-    	String username = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+    	String username = AuthUtils.getAuthenticatedUserUsername();
     	
     	User user = userService.findUserByUsername(username);
     	
@@ -42,7 +43,7 @@ public class MyUserController {
     @PreAuthorize("isAuthenticated()")
     public StrangerUser editMyUser(){
     	
-    	String username = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+    	String username = AuthUtils.getAuthenticatedUserUsername();
     	
     	User user = userService.findUserByUsername(username);
     	

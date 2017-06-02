@@ -19,7 +19,8 @@ public class EventAttender implements Serializable {
 
 	private String confirmed;
 
-	private int rating;
+	@Column(name="rating")
+	private Integer rating;
 
 	//bi-directional many-to-one association to Event
 	@ManyToOne
@@ -52,14 +53,14 @@ public class EventAttender implements Serializable {
 		this.confirmed = confirmed;
 	}
 
-	public int getRating() {
+	public Integer getRating() {
 		return this.rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
-/*
+
 	public Event getEvent() {
 		return this.event;
 	}
@@ -75,5 +76,5 @@ public class EventAttender implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-*/
+
 }

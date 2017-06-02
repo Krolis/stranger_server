@@ -1,6 +1,9 @@
 package com.yeahbunny.stranger.server.controller.dto.response;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import com.yeahbunny.stranger.server.model.Event;
 
 /**
  * Created by kroli on 27.05.2017.
@@ -12,6 +15,18 @@ public class StrangersEventListItem {
     private Calendar date;
     private long id;
 
+    public StrangersEventListItem() {
+    	date = new GregorianCalendar();
+    }
+    
+    public StrangersEventListItem(Event event) {
+    	this();
+    	this.id = event.getIdEvent();
+    	this.title = event.getTitle();
+    	this.where = "NOT IMPLEMENTED"; // TODO - do dodania
+    	this.date.setTime(event.getDateStart());
+    }
+    
     public String getTitle() {
         return title;
     }

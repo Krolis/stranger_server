@@ -1,49 +1,42 @@
 package com.yeahbunny.stranger.server.controller;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventListItem;
+import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.services.EventService;
+import com.yeahbunny.stranger.server.utils.AuthUtils;
 
 /**
  * Created by kroli on 27.05.2017.
  */
 @Controller
 public class MyEventsController {
+	
+	@Inject
+	EventService eventService;
 
-    @RequestMapping(value = "/user/myEvents", method = RequestMethod.GET)
-    @ResponseBody
-    public List<StrangersEventListItem> getMyEvents(){
-        List<StrangersEventListItem> mockEvents = new ArrayList<>();
+	@RequestMapping(value = "/user/myEvents", method = RequestMethod.GET)
+	@ResponseBody
+    @PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<StrangersEventListItem>> getMyEvents() {
+		String username = AuthUtils.getAuthenticatedUserUsername();
+		List<Event> myEvents = eventService.findEventsCreatedByUser(username);
+		List<StrangersEventListItem> responseEvents = new ArrayList<>();
+		for(Event myEvent : myEvents) {
+			responseEvents.add(new StrangersEventListItem(myEvent));
+		}
 
-        StrangersEventListItem strangersEventMarker1 = new StrangersEventListItem();
-        strangersEventMarker1.setId(1);
-        strangersEventMarker1.setTitle("Spotkanie zespołu Strangers");
-        strangersEventMarker1.setWhere("PK");
-        strangersEventMarker1.setDate(new GregorianCalendar(2017, 3,11,7,30));
-        mockEvents.add(strangersEventMarker1);
-
-        StrangersEventListItem strangersEventMarker2  = new StrangersEventListItem();
-        strangersEventMarker2.setId(2);
-        strangersEventMarker2.setTitle("SZOPING");
-        strangersEventMarker2.setWhere("galeria krakowska");
-        strangersEventMarker2.setDate(new GregorianCalendar(2017, 3,11,7,30));
-        mockEvents.add(strangersEventMarker2);
-
-
-        StrangersEventListItem strangersEventMarker3  = new StrangersEventListItem();
-        strangersEventMarker3.setId(2);
-        strangersEventMarker3.setTitle("piwko w pijalni");
-        strangersEventMarker3.setWhere("pijalnia wódki i piwa");
-        strangersEventMarker3.setDate(new GregorianCalendar(2017, 3,11,20,30));
-        mockEvents.add(strangersEventMarker3);
-
-        return mockEvents;
-    }
+		return ResponseEntity.ok(responseEvents);
+	}
 }
