@@ -25,7 +25,7 @@ public class UserController {
 	
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<StrangerUser> getMyUser(@PathVariable long userId){
+    public ResponseEntity<StrangerUser> getUser(@PathVariable long userId){
     	User user = userService.findUserById(userId);
     	if (user != null)
     		return ResponseEntity.ok(new StrangerUser(user));

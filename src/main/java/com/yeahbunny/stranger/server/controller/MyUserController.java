@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.controller;
 
 import javax.inject.Inject;
 
+import com.yeahbunny.stranger.server.services.PrincipalProvider;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,10 @@ public class MyUserController {
 
 	@Inject
 	UserService userService;
-	
+
+    @Inject
+    private PrincipalProvider principalProvider;
+
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     @PreAuthorize("isAuthenticated()")
@@ -42,7 +46,7 @@ public class MyUserController {
     @PreAuthorize("isAuthenticated()")
     public StrangerUser editMyUser(){
     	
-    	String username = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+    	String username = principalProvider.getUsername();
     	
     	User user = userService.findUserByUsername(username);
     	

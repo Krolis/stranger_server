@@ -35,6 +35,10 @@ public class EventServiceImpl implements EventService {
 	public Event findEventById(long id) {
 		return eventRepo.findOne(id);
 	}
-	
-	
+
+	@Override
+	public Long save(Event event) {
+		Event saved = eventRepo.save(event);
+		return saved.getIdEvent();
+	}
 }

@@ -18,4 +18,6 @@ public interface EventService {
 	public List<Event> findAllEventsLazy();
 	
 	public Event findEventById(long id);
+
+	public Long save(Event event);
 }

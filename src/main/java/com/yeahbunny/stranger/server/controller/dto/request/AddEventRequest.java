@@ -1,5 +1,6 @@
 package com.yeahbunny.stranger.server.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,8 @@ public class AddEventRequest {
     @NotNull
     @NotEmpty
     private String description;
+
+    private int maxAttenders;
 
     public double getLatitude() {
         return latitude;
@@ -82,6 +85,14 @@ public class AddEventRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getMaxAttenders() {
+        return maxAttenders;
+    }
+
+    public void setMaxAttenders(int maxAttenders) {
+        this.maxAttenders = maxAttenders;
     }
 
     @Override
