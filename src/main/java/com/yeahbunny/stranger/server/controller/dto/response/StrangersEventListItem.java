@@ -14,17 +14,19 @@ public class StrangersEventListItem {
     private String where;
     private Calendar date;
     private long id;
+    private int unreadMsg;
 
     public StrangersEventListItem() {
     	date = new GregorianCalendar();
     }
     
-    public StrangersEventListItem(Event event) {
+    public StrangersEventListItem(Event event, int unreadMsg) {
     	this();
     	this.id = event.getIdEvent();
     	this.title = event.getTitle();
     	this.where = "NOT IMPLEMENTED"; // TODO - do dodania
     	this.date.setTime(event.getDateStart());
+        this.unreadMsg = unreadMsg;
     }
     
     public String getTitle() {
@@ -57,5 +59,13 @@ public class StrangersEventListItem {
 
     public long getId() {
         return id;
+    }
+
+    public int getUnreadMsg() {
+        return unreadMsg;
+    }
+
+    public void setUnreadMsg(int unreadMsg) {
+        this.unreadMsg = unreadMsg;
     }
 }

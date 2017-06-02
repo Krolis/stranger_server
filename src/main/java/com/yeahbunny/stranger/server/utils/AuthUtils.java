@@ -8,4 +8,8 @@ public class AuthUtils {
 	public static String getAuthenticatedUserUsername() {
 		return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 	}
+
+	public static Long getAuthenticatedUserId() {
+		return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+	}
 }

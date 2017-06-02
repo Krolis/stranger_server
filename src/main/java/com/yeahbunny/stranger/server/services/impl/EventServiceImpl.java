@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -60,6 +61,19 @@ public class EventServiceImpl implements EventService {
 		User creator = userRepo.findByUsername(username);
 		List<Event> events = new ArrayList<>();
 		events.addAll(creator.getEvents());
+		return events;
+	}
+
+	@Override
+	public List<Event> findEventsAttendedByUser(String username) {
+		User creator = userRepo.findByUsername(username);
+		List<Event> events = creator.getEventAttenders()
+				.stream()
+				.map(eventAttender -> {
+					return eventAttender.getEvent();
+				})
+				.collect(Collectors.toList());
+
 		return events;
 	}
 

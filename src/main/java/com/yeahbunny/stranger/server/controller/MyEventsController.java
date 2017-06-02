@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.yeahbunny.stranger.server.model.EventAttender;
+import com.yeahbunny.stranger.server.model.EventAttenderPK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,8 +35,9 @@ public class MyEventsController {
 		String username = AuthUtils.getAuthenticatedUserUsername();
 		List<Event> myEvents = eventService.findEventsCreatedByUser(username);
 		List<StrangersEventListItem> responseEvents = new ArrayList<>();
+
 		for(Event myEvent : myEvents) {
-			responseEvents.add(new StrangersEventListItem(myEvent));
+			responseEvents.add(new StrangersEventListItem(myEvent,myEvent.getUnreadedMessages()));
 		}
 
 		return ResponseEntity.ok(responseEvents);

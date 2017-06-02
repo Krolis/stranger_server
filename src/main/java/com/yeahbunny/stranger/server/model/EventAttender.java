@@ -22,6 +22,9 @@ public class EventAttender implements Serializable {
 	@Column(name="rating")
 	private Integer rating;
 
+	@Column(name = "unread_msg")
+	private int unreadedMessages;
+
 	//bi-directional many-to-one association to Event
 	@ManyToOne
 	@JoinColumn(name="id_event")
@@ -77,4 +80,11 @@ public class EventAttender implements Serializable {
 		this.user = user;
 	}
 
+	public int getUnreadedMessages() {
+		return unreadedMessages;
+	}
+
+	public void setUnreadedMessages(int unreadedMessages) {
+		this.unreadedMessages = unreadedMessages;
+	}
 }

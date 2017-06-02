@@ -39,4 +39,6 @@ public interface EventService {
 	List<Event> findEventsCreatedByUser(String username);
 	
 	public Long save(Event event);
+
+	List<Event> findEventsAttendedByUser(String username);
 }

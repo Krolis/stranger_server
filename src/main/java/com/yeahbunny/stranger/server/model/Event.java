@@ -45,6 +45,9 @@ public class Event implements Serializable {
 	@Column(name="details")
 	private String details;
 
+	@Column(name = "unread_msg")
+	private int unreadedMessages;
+
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="id_user_organizer")
@@ -214,4 +217,11 @@ public class Event implements Serializable {
 		return report;
 	}
 
+	public int getUnreadedMessages() {
+		return unreadedMessages;
+	}
+
+	public void setUnreadedMessages(int unreadedMessages) {
+		this.unreadedMessages = unreadedMessages;
+	}
 }
