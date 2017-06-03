@@ -2,6 +2,9 @@ package com.yeahbunny.stranger.server.services;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
+import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
 import com.yeahbunny.stranger.server.model.Event;
 
 public interface EventService {
@@ -41,4 +44,5 @@ public interface EventService {
 	public Long save(Event event);
 
 	List<Event> findEventsAttendedByUser(String username);
+
 }

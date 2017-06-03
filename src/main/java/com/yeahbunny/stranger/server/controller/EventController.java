@@ -63,22 +63,17 @@ public class EventController {
     public ResponseEntity<Void> joinToEvent(@PathVariable long eventId){
 		String username = AuthUtils.getAuthenticatedUserUsername();
 		long start_time = System.nanoTime();
-    	Event event = eventService.findEventById(eventId);
-    	if (event == null) 
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     	
-    	User user = userService.findUserByUsernameWithOwnEvents(username);
-    	EventAttender evAttender = new EventAttender(event, user);
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time)/1e6;
-		System.out.println("Time: " + difference);
     	try {
-    		eventAttenderService.addNewEventAttender(evAttender);
+    		eventAttenderService.joinToEvent(eventId, username);
     	} catch(EventAttenderExistsException ex) {
     		return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-    	} finally {
-    		end_time = System.nanoTime();
-    		difference = (end_time - start_time)/1e6;
+    	} catch (EntityNotFoundException ex) {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+    	finally {
+    		long end_time = System.nanoTime();
+    		double difference = (end_time - start_time)/1e6;
     		System.out.println("Time: " + difference);
     	}
     	
@@ -88,24 +83,17 @@ public class EventController {
     @RequestMapping(value = "/event/{eventId}/cancel", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Void> quitFromEvent(@PathVariable long eventId){
-		String username = AuthUtils.getAuthenticatedUserUsername();
+    	String username = AuthUtils.getAuthenticatedUserUsername();
 		long start_time = System.nanoTime();
-    	Event event = eventService.findEventById(eventId);
-    	if (event == null) 
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     	
-    	User user = userService.findUserByUsername(username);
-    	EventAttender evAttender = new EventAttender(event, user);
-		long end_time = System.nanoTime();
-		double difference = (end_time - start_time)/1e6;
-		System.out.println("Time: " + difference);
     	try {
-    		eventAttenderService.quitFromEvent(evAttender);
-    	} catch(EntityNotFoundException e) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    	} finally {
-    		end_time = System.nanoTime();
-    		difference = (end_time - start_time)/1e6;
+    		eventAttenderService.quitFromEvent(eventId, username);
+    	} catch (EntityNotFoundException ex) {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+    	finally {
+    		long end_time = System.nanoTime();
+    		double difference = (end_time - start_time)/1e6;
     		System.out.println("Time: " + difference);
     	}
     	

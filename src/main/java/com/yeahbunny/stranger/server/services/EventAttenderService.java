@@ -9,8 +9,8 @@ public interface EventAttenderService {
 
 	void save(Iterable<EventAttender> evAttenders);
 
-	void addNewEventAttender(EventAttender evAttender) throws EventAttenderExistsException;
-
-	void quitFromEvent(EventAttender evAttender) throws EntityNotFoundException;
+	void joinToEvent(long eventId, String username)  throws EntityNotFoundException, EventAttenderExistsException;
+	
+	void quitFromEvent(long eventId, String username) throws EntityNotFoundException;
 
 }
