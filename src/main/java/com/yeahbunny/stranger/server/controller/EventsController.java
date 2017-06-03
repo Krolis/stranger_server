@@ -1,11 +1,11 @@
 package com.yeahbunny.stranger.server.controller;
 
-import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventListItem;
-import com.yeahbunny.stranger.server.model.Event;
-import com.yeahbunny.stranger.server.model.EventAttender;
-import com.yeahbunny.stranger.server.model.EventAttenderPK;
-import com.yeahbunny.stranger.server.services.EventService;
-import com.yeahbunny.stranger.server.utils.AuthUtils;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersEventListItem;
+import com.yeahbunny.stranger.server.model.EventAttender;
+import com.yeahbunny.stranger.server.model.User;
+import com.yeahbunny.stranger.server.services.EventAttenderService;
+import com.yeahbunny.stranger.server.services.EventService;
+import com.yeahbunny.stranger.server.services.UserService;
+import com.yeahbunny.stranger.server.utils.AuthUtils;
 
 /**
  * Created by kroli on 02.06.2017.
@@ -23,41 +27,48 @@ import java.util.List;
 @Controller
 public class EventsController {
 
-    @Inject
-    EventService eventService;
+	@Inject
+	EventService eventService;
 
-    @RequestMapping(value = "/user/events", method = RequestMethod.GET)
-    @ResponseBody
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<StrangersEventListItem>> getMyEvents() {
-        String username = AuthUtils.getAuthenticatedUserUsername();
-        List<Event> myEvents = eventService.findEventsAttendedByUser(username);
-        List<StrangersEventListItem> responseEvents = new ArrayList<>();
+	@Inject
+	UserService userService;
+	
+	@Inject
+	EventAttenderService eventAttenderService;
 
-        for(Event myEvent : myEvents) {
-            int unreadMessages = getUnreadMessages(myEvent);
-            responseEvents.add(new StrangersEventListItem(myEvent,unreadMessages));
-        }
+	@RequestMapping(value = "/user/events", method = RequestMethod.GET)
+	@ResponseBody
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<StrangersEventListItem>> getMyEvents() {
+		String username = AuthUtils.getAuthenticatedUserUsername();
+		User user = userService.findUserByUsernameEagerily(username);
+		List<StrangersEventListItem> responseEvents = new ArrayList<>();
+		Date curTimestamp = new Date();
+		for (EventAttender evAttender : user.getEventAttenders()) {
+			int unreadMessages = getUnreadMessages(evAttender);
+			responseEvents.add(new StrangersEventListItem(evAttender.getEvent(), unreadMessages));
+			evAttender.setReadMessageTimestamp(curTimestamp);
+		}
+		eventAttenderService.save(user.getEventAttenders());
 
-        return ResponseEntity.ok(responseEvents);
-    }
+		return ResponseEntity.ok(responseEvents);
+	}
 
-    /**
-     *
-     * chyba troche heheeh zero optymalnie ale w sumie lista eventów bedzie skonczona, attendersow raczej też
-     *
-     */
-    private int getUnreadMessages(Event myEvent) {
-        EventAttenderPK key = new EventAttenderPK();
-        key.setIdUser(AuthUtils.getAuthenticatedUserId());
-        key.setIdEvent(myEvent.getIdEvent());
+	/**
+	 *
+	 * chyba troche heheeh zero optymalnie ale w sumie lista eventów bedzie
+	 * skonczona, attendersow raczej też
+	 *
+	 */
+	private int getUnreadMessages(EventAttender evAttender) {
+		int unreadMessages = 0;
+		Date msgTimestamp = evAttender.getReadMessageTimestamp();
+		if (msgTimestamp != null)
+			unreadMessages = (int) evAttender.getEvent().getEventMessages().stream()
+					.filter(msg -> msgTimestamp.before(msg.getDate())).count();
+		else 
+			unreadMessages = evAttender.getEvent().getEventMessages().size();
+		return unreadMessages;
+	}
 
-        for(EventAttender eventAttender : myEvent.getEventAttenders()){
-            if(eventAttender.getId().equals(key)){
-                return eventAttender.getUnreadedMessages();
-            }
-        }
-
-        return 0;
-    }
 }

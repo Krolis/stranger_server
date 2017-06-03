@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.exception.UserExistsException;
+import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.model.EventAttender;
 import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.UserService;
@@ -32,6 +34,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findUserByUsername(String username) {
 		return userRepo.findByUsername(username);
+	}
+	
+	@Override 
+	public User findUserByUsernameEagerily(String username) {
+		User user = findUserByUsername(username);
+		if (user != null) {
+			for (EventAttender evAttender : user.getEventAttenders()) {
+				evAttender.getEvent().getEventMessages().size();
+			}
+			for (Event event : user.getEvents()) {
+				event.getEventMessages().size();
+			}
+			user.getEventMessages().size();
+		}
+		return user;
 	}
 
 	private boolean userExists(String username) {

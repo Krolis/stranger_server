@@ -1,7 +1,16 @@
 package com.yeahbunny.stranger.server.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -22,8 +31,8 @@ public class EventAttender implements Serializable {
 	@Column(name="rating")
 	private Integer rating;
 
-	@Column(name = "unread_msg")
-	private int unreadedMessages;
+	@Column(name = "read_msg_timestamp")
+	private Date readMessageTimestamp;
 
 	//bi-directional many-to-one association to Event
 	@ManyToOne
@@ -80,11 +89,12 @@ public class EventAttender implements Serializable {
 		this.user = user;
 	}
 
-	public int getUnreadedMessages() {
-		return unreadedMessages;
+	public Date getReadMessageTimestamp() {
+		return readMessageTimestamp;
 	}
 
-	public void setUnreadedMessages(int unreadedMessages) {
-		this.unreadedMessages = unreadedMessages;
+	public void setReadMessageTimestamp(Date readMessageTimestamp) {
+		this.readMessageTimestamp = readMessageTimestamp;
 	}
+	
 }
