@@ -46,9 +46,12 @@ public class EventAttender implements Serializable {
 	@JoinColumn(name="id_user")
 	private User user;
 
-	public EventAttender() {}
+	public EventAttender() {
+		this.readMessageTimestamp = new Date();
+	}
 
 	public EventAttender(Event event, User user) {
+		this();
 		this.id = new EventAttenderPK(event.getIdEvent(), user.getIdUser());
 		this.event = event;
 		this.user = user;

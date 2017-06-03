@@ -34,7 +34,14 @@ public interface EventService {
 	 */
 	Event findEventByIdEagerly(long id);
 
-	StrangersEvent findUserStrangerEventById(long id, String username) throws EntityNotFoundException;
+	/**
+	 * 
+	 * @param id
+	 * @param username
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	StrangersEvent findUserStrangerEventAndRefreshTimestamp(long id, String username) throws EntityNotFoundException;
 	
 	/**
 	 * 

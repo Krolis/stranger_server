@@ -1,9 +1,21 @@
 package com.yeahbunny.stranger.server.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 /**
@@ -24,6 +36,7 @@ public class EventMessage implements Serializable {
 	private String content;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date date;
 
 	//bi-directional many-to-one association to Event
@@ -41,7 +54,18 @@ public class EventMessage implements Serializable {
 	private Set<Report> reports;
 
 	public EventMessage() {
+		super();
+		this.date = new Date();
 	}
+
+	public EventMessage(Event event, User user, String content) {
+		this();
+		this.content = content;
+		this.event = event;
+		this.user = user;
+	}
+
+
 
 	public int getIdMessage() {
 		return this.idMessage;

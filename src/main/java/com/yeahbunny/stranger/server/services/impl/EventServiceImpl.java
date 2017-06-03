@@ -16,6 +16,7 @@ import com.yeahbunny.stranger.server.model.Event;
 import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.repositories.EventRepository;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
+import com.yeahbunny.stranger.server.services.EventMessageService;
 import com.yeahbunny.stranger.server.services.EventService;
 
 @Repository
@@ -27,6 +28,9 @@ public class EventServiceImpl implements EventService {
 	
 	@Inject
 	UserRepository userRepo;
+	
+	@Inject
+	EventMessageService eventMessageService;
 	
 	@Override
 	public List<Event> findAllEventsLazy() {
@@ -86,16 +90,6 @@ public class EventServiceImpl implements EventService {
 		return saved.getIdEvent();
 	}
 
-	@Override
-	public StrangersEvent findUserStrangerEventById(long id, String username) throws EntityNotFoundException {
-		Event event = null;
-		User user = null;
-		if((event = findEventByIdEagerly(id)) == null || (user = userRepo.findByUsername(username)) == null)
-			throw new EntityNotFoundException();
-		UserEventRelation usEvRelation = getUserEventRelation(user, event);
-		return new StrangersEvent(event, usEvRelation);
-	}
-
 	private UserEventRelation getUserEventRelation(User user, Event event) {
 		UserEventRelation usEvRelation;
 		if (user.getEvents().contains(event))
@@ -105,6 +99,19 @@ public class EventServiceImpl implements EventService {
 		else
 			usEvRelation = UserEventRelation.STRANGER;
 		return usEvRelation;
+	}
+
+	@Override
+	public StrangersEvent findUserStrangerEventAndRefreshTimestamp(long id, String username)
+			throws EntityNotFoundException {
+		Event event = null;
+		User user = null;
+		if((event = findEventByIdEagerly(id)) == null || (user = userRepo.findByUsername(username)) == null)
+			throw new EntityNotFoundException();
+		eventMessageService.refreshUnreadCommentsTimestamp(user, event);
+		
+		UserEventRelation usEvRelation = getUserEventRelation(user, event);
+		return new StrangersEvent(event, usEvRelation);
 	}
 
 }

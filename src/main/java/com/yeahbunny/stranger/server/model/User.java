@@ -83,8 +83,10 @@ public class User implements Serializable {
 			this.gender = "F";
 		else
 			this.gender = "M";
-	}
-
+	} 
+	
+	//getters
+	
 	public Long getIdUser() {
 		return this.idUser;
 	}

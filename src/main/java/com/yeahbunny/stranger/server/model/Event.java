@@ -4,7 +4,19 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.yeahbunny.stranger.server.controller.dto.response.EventType;
 
@@ -48,6 +60,9 @@ public class Event implements Serializable {
 	@Column(name = "unread_msg")
 	private int unreadedMessages;
 
+	@Column(name = "read_msg_timestamp")
+	private Date readMessageTimestamp;
+	
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="id_user_organizer")
@@ -66,6 +81,7 @@ public class Event implements Serializable {
 	private Set<Report> reports;
 
 	public Event() {
+		this.readMessageTimestamp = new Date();
 	}
 	
 	public EventType checkEventType() {
@@ -77,6 +93,13 @@ public class Event implements Serializable {
 			return EventType.NOW;
     	else
     		return EventType.HISTORIC;
+	}
+	
+	@Transient
+	public EventAttender getEventAttender(User user) {
+		if (getEventAttenders() != null)
+			return getEventAttenders().stream().filter(evAt -> evAt.getUser().equals(user)).findFirst().get();
+		else return null;
 	}
 
 	public Long getIdEvent() {
@@ -224,4 +247,18 @@ public class Event implements Serializable {
 	public void setUnreadedMessages(int unreadedMessages) {
 		this.unreadedMessages = unreadedMessages;
 	}
+
+	public Date getReadMessageTimestamp() {
+		return readMessageTimestamp;
+	}
+
+	public void setReadMessageTimestamp(Date readMessageTimestamp) {
+		this.readMessageTimestamp = readMessageTimestamp;
+	}
+
+	public void setMaxAttenders(int maxAttenders) {
+		this.maxAttenders = maxAttenders;
+	}
+	
+	
 }

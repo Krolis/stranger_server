@@ -52,7 +52,7 @@ public class EventController {
     	String username = AuthUtils.getAuthenticatedUserUsername();
     	StrangersEvent strangerEvent;
     	try {
-    		strangerEvent = eventService.findUserStrangerEventById(eventId, username);
+    		strangerEvent = eventService.findUserStrangerEventAndRefreshTimestamp(eventId, username);
     	} catch (EntityNotFoundException ex) {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     	}
