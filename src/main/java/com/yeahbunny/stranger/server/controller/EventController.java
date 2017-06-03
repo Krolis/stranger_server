@@ -19,8 +19,6 @@ import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
 import com.yeahbunny.stranger.server.model.Event;
-import com.yeahbunny.stranger.server.model.EventAttender;
-import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.services.EventAttenderService;
 import com.yeahbunny.stranger.server.services.EventService;
 import com.yeahbunny.stranger.server.services.UserService;
@@ -51,10 +49,13 @@ public class EventController {
     @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<StrangersEvent> getEvent(@PathVariable long eventId){
-    	Event event = eventService.findEventByIdEagerly(eventId);
-    	if (event == null) 
+    	String username = AuthUtils.getAuthenticatedUserUsername();
+    	StrangersEvent strangerEvent;
+    	try {
+    		strangerEvent = eventService.findUserStrangerEventById(eventId, username);
+    	} catch (EntityNotFoundException ex) {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        StrangersEvent strangerEvent = new StrangersEvent(event);
+    	}
         return ResponseEntity.ok(strangerEvent);
     }
     

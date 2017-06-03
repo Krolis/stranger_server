@@ -21,6 +21,7 @@ public class StrangersEvent {
     private List<StrangerEventMessage> messages;
     private String where;
     private StrangerUser owner;
+    private UserEventRelation usEvRelation;
 
     public StrangersEvent() {
     	date = new GregorianCalendar();
@@ -28,7 +29,7 @@ public class StrangersEvent {
     	messages = new ArrayList<>();
     }
     
-    public StrangersEvent(Event event) {
+    public StrangersEvent(Event event, UserEventRelation usEvRelation) {
     	this();
     	this.id = event.getIdEvent();
     	this.position = new LatLng(event.getLatitude(), event.getLongitude());
@@ -43,6 +44,7 @@ public class StrangersEvent {
     		this.messages.add(new StrangerEventMessage(evMessage));
     	}
     	this.owner = new StrangerUser(event.getCreator());
+    	this.usEvRelation = usEvRelation;
     	// TODO - where
     }
     
@@ -125,4 +127,13 @@ public class StrangersEvent {
     public StrangerUser getOwner() {
         return owner;
     }
+
+	public UserEventRelation getUsEvRelation() {
+		return usEvRelation;
+	}
+
+	public void setUsEvRelation(UserEventRelation usEvRelation) {
+		this.usEvRelation = usEvRelation;
+	}
+    
 }

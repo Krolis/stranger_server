@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
-import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
 import com.yeahbunny.stranger.server.model.Event;
 
 public interface EventService {
@@ -34,6 +34,8 @@ public interface EventService {
 	 */
 	Event findEventByIdEagerly(long id);
 
+	StrangersEvent findUserStrangerEventById(long id, String username) throws EntityNotFoundException;
+	
 	/**
 	 * 
 	 * @param username
