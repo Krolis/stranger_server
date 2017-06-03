@@ -15,4 +15,6 @@ public interface UserService {
 	public User addNewUser(User newUser) throws UserExistsException;
 
 	User findUserByUsernameEagerily(String username);
+
+	User findUserByUsernameWithOwnEvents(String username);
 }

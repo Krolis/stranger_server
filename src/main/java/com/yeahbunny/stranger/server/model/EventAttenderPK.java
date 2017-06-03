@@ -20,6 +20,10 @@ public class EventAttenderPK implements Serializable {
 
 	public EventAttenderPK() {
 	}
+	public EventAttenderPK(Long idEvent, Long idUser) {
+		this.idEvent = idEvent;
+		this.idUser = idUser;
+	}
 	public long getIdEvent() {
 		return this.idEvent;
 	}

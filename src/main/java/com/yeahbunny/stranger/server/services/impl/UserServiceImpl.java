@@ -50,6 +50,15 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
+	
+	@Override 
+	public User findUserByUsernameWithOwnEvents(String username) {
+		User user = findUserByUsername(username);
+		if (user != null)
+			user.getEvents().size();
+		
+		return user;
+	}
 
 	private boolean userExists(String username) {
 		if (findUserByUsername(username) != null)

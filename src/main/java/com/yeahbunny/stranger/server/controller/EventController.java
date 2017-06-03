@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
+import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
 import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.model.EventAttender;
+import com.yeahbunny.stranger.server.model.User;
+import com.yeahbunny.stranger.server.services.EventAttenderService;
 import com.yeahbunny.stranger.server.services.EventService;
+import com.yeahbunny.stranger.server.services.UserService;
+import com.yeahbunny.stranger.server.utils.AuthUtils;
 
 /**
  * Created by kroli on 27.05.2017.
@@ -27,6 +34,12 @@ public class EventController {
 	
 	@Inject
 	EventService eventService;
+	
+	@Inject
+	UserService userService;
+	
+	@Inject 
+	EventAttenderService eventAttenderService;
 
 	// TODO - to remove
     @RequestMapping(value = "/event", method = RequestMethod.GET)
@@ -43,6 +56,60 @@ public class EventController {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         StrangersEvent strangerEvent = new StrangersEvent(event);
         return ResponseEntity.ok(strangerEvent);
+    }
+    
+    @RequestMapping(value = "/event/{eventId}/attend", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Void> joinToEvent(@PathVariable long eventId){
+		String username = AuthUtils.getAuthenticatedUserUsername();
+		long start_time = System.nanoTime();
+    	Event event = eventService.findEventById(eventId);
+    	if (event == null) 
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	
+    	User user = userService.findUserByUsernameWithOwnEvents(username);
+    	EventAttender evAttender = new EventAttender(event, user);
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("Time: " + difference);
+    	try {
+    		eventAttenderService.addNewEventAttender(evAttender);
+    	} catch(EventAttenderExistsException ex) {
+    		return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    	} finally {
+    		end_time = System.nanoTime();
+    		difference = (end_time - start_time)/1e6;
+    		System.out.println("Time: " + difference);
+    	}
+    	
+        return ResponseEntity.ok(null);
+    }
+    
+    @RequestMapping(value = "/event/{eventId}/cancel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Void> quitFromEvent(@PathVariable long eventId){
+		String username = AuthUtils.getAuthenticatedUserUsername();
+		long start_time = System.nanoTime();
+    	Event event = eventService.findEventById(eventId);
+    	if (event == null) 
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	
+    	User user = userService.findUserByUsername(username);
+    	EventAttender evAttender = new EventAttender(event, user);
+		long end_time = System.nanoTime();
+		double difference = (end_time - start_time)/1e6;
+		System.out.println("Time: " + difference);
+    	try {
+    		eventAttenderService.quitFromEvent(evAttender);
+    	} catch(EntityNotFoundException e) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	} finally {
+    		end_time = System.nanoTime();
+    		difference = (end_time - start_time)/1e6;
+    		System.out.println("Time: " + difference);
+    	}
+    	
+        return ResponseEntity.ok(null);
     }
     
 
