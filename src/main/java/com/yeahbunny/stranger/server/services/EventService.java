@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 import com.yeahbunny.stranger.server.model.Event;
 
 public interface EventService {
@@ -13,13 +16,20 @@ public interface EventService {
 	 * @return All services with all children entities
 	 */
 	public List<Event> findAllEventsEagerly();
-	
+
 	/**
 	 * 
 	 * @return All services without children entities
 	 */
 	public List<Event> findAllEventsLazy();
-	
+
+	/**
+	 * 
+	 * @return Plain events objects within range
+	 */
+	public List<StrangersPlainEvent> findPlainEvents(double northeast_lat, double northeast_lng, double southwest_lat,
+			double southwest_lng);
+
 	/**
 	 * 
 	 * @param eventId
@@ -29,6 +39,7 @@ public interface EventService {
 
 	/**
 	 * s
+	 * 
 	 * @param id
 	 * @return Event with eagerly loaded children entities
 	 */
@@ -42,14 +53,14 @@ public interface EventService {
 	 * @throws EntityNotFoundException
 	 */
 	StrangersEvent findUserStrangerEventAndRefreshTimestamp(long id, String username) throws EntityNotFoundException;
-	
+
 	/**
 	 * 
 	 * @param username
 	 * @return
 	 */
 	List<Event> findEventsCreatedByUser(String username);
-	
+
 	public Long save(Event event);
 
 	List<Event> findEventsAttendedByUser(String username);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 import com.yeahbunny.stranger.server.controller.dto.response.UserEventRelation;
 import com.yeahbunny.stranger.server.model.Event;
 import com.yeahbunny.stranger.server.model.User;
@@ -111,6 +112,13 @@ public class EventServiceImpl implements EventService {
 		UserEventRelation usEvRelation = getUserEventRelation(user, event);
 		eventMessageService.refreshUnreadCommentsTimestamp(user, event, usEvRelation);
 		return new StrangersEvent(event, usEvRelation);
+	}
+
+	@Override
+	public List<StrangersPlainEvent> findPlainEvents(double northeast_lat, double northeast_lng, double southwest_lat,
+			double southwest_lng) {
+		List<Event> events = eventRepo.findEventsInRange(northeast_lat, northeast_lng, southwest_lat, southwest_lng);
+		return events.stream().map(ev -> new StrangersPlainEvent(ev)).collect(Collectors.toList());
 	}
 
 }
