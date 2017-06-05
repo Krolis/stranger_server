@@ -92,7 +92,7 @@ public class EventServiceImpl implements EventService {
 
 	private UserEventRelation getUserEventRelation(User user, Event event) {
 		UserEventRelation usEvRelation;
-		if (user.getEvents().contains(event))
+		if (user.getIdUser().equals(event.getCreator().getIdUser()))
 			usEvRelation = UserEventRelation.OWNER;
 		else if(user.getEventAttenders().stream().anyMatch(evAt -> evAt.getEvent().equals(event)))
 			usEvRelation = UserEventRelation.ATTENDER;

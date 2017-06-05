@@ -76,8 +76,10 @@ public class EventMessageServiceImpl implements EventMessageService {
 			eventRepo.save(event);
 		} else if (usEvRelation == UserEventRelation.ATTENDER) {
 			EventAttender evAtt = event.getEventAttender(user);
-			evAtt.setReadMessageTimestamp(new Date());
-			eventAttenderRepo.save(evAtt);
+			if(evAtt!=null){
+				evAtt.setReadMessageTimestamp(new Date());
+				eventAttenderRepo.save(evAtt);
+			}
 		}
 	}
 	
