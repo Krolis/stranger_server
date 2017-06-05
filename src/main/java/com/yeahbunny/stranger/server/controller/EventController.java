@@ -29,77 +29,89 @@ import com.yeahbunny.stranger.server.utils.AuthUtils;
  */
 @Controller
 public class EventController {
-
+	
 	@Inject
 	EventService eventService;
-
+	
 	@Inject
 	UserService userService;
-
-	@Inject
+	
+	@Inject 
 	EventAttenderService eventAttenderService;
 
-	@RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<StrangersEvent> getEvent(@PathVariable long eventId) {
-		String username = AuthUtils.getAuthenticatedUserUsername();
-		StrangersEvent strangerEvent;
-		try {
-			strangerEvent = eventService.findUserStrangerEventAndRefreshTimestamp(eventId, username);
-		} catch (EntityNotFoundException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-		}
-		return ResponseEntity.ok(strangerEvent);
-	}
-
-	@RequestMapping(value = "/event/{eventId}/attend", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Void> joinToEvent(@PathVariable long eventId) {
-		String username = AuthUtils.getAuthenticatedUserUsername();
-		long start_time = System.nanoTime();
-
-		try {
-			eventAttenderService.joinToEvent(eventId, username);
-		} catch (EventAttenderExistsException ex) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-		} catch (EntityNotFoundException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-		} finally {
-			long end_time = System.nanoTime();
-			double difference = (end_time - start_time) / 1e6;
-			System.out.println("Time: " + difference);
-		}
-
-		return ResponseEntity.ok(null);
-	}
-
-	@RequestMapping(value = "/event/{eventId}/cancel", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Void> quitFromEvent(@PathVariable long eventId) {
+    @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<StrangersEvent> getEvent(@PathVariable long eventId){
+    	String username = AuthUtils.getAuthenticatedUserUsername();
+    	StrangersEvent strangerEvent;
+    	try {
+    		strangerEvent = eventService.findUserStrangerEventAndRefreshTimestamp(eventId, username);
+    	} catch (EntityNotFoundException ex) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+        return ResponseEntity.ok(strangerEvent);
+    }
+    
+    @RequestMapping(value = "/event/{eventId}/attend", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Void> joinToEvent(@PathVariable long eventId){
 		String username = AuthUtils.getAuthenticatedUserUsername();
 		long start_time = System.nanoTime();
+    	
+    	try {
+    		eventAttenderService.joinToEvent(eventId, username);
+    	} catch(EventAttenderExistsException ex) {
+    		return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    	} catch (EntityNotFoundException ex) {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+    	finally {
+    		long end_time = System.nanoTime();
+    		double difference = (end_time - start_time)/1e6;
+    		System.out.println("Time: " + difference);
+    	}
+    	
+        return ResponseEntity.ok(null);
+    }
+    
+    @RequestMapping(value = "/event/{eventId}/cancel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Void> quitFromEvent(@PathVariable long eventId){
+    	String username = AuthUtils.getAuthenticatedUserUsername();
+		long start_time = System.nanoTime();
+    	
+    	try {
+    		eventAttenderService.quitFromEvent(eventId, username);
+    	} catch (EntityNotFoundException ex) {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+    	finally {
+    		long end_time = System.nanoTime();
+    		double difference = (end_time - start_time)/1e6;
+    		System.out.println("Time: " + difference);
+    	}
+    	
+        return ResponseEntity.ok(null);
+    }
+    
 
-		try {
-			eventAttenderService.quitFromEvent(eventId, username);
-		} catch (EntityNotFoundException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-		} finally {
-			long end_time = System.nanoTime();
-			double difference = (end_time - start_time) / 1e6;
-			System.out.println("Time: " + difference);
-		}
+    
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<StrangersPlainEvent>> getEvents(@RequestParam double northeast_lat,
+                                                @RequestParam double northeast_lng,
+                                                @RequestParam double southwest_lat,
+                                                @RequestParam double southwest_lng){
+    	// TODO - obsługa parametrów
+        List<StrangersPlainEvent> plainEvents = new ArrayList<>();
 
-		return ResponseEntity.ok(null);
-	}
+        List<Event> modelEvents = eventService.findAllEventsLazy();
+        
+        for (Event event : modelEvents) {
+        	plainEvents.add(new StrangersPlainEvent(event));
+        }
 
-	@RequestMapping(value = "/events", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<List<StrangersPlainEvent>> getEvents(@RequestParam double northeast_lat,
-			@RequestParam double northeast_lng, @RequestParam double southwest_lat,
-			@RequestParam double southwest_lng) {
-		List<StrangersPlainEvent> plainEvents = eventService.findPlainEvents(northeast_lat, northeast_lng, southwest_lat, southwest_lng);
-
-		return ResponseEntity.ok(plainEvents);
-	}
-
+        return ResponseEntity.ok(plainEvents);
+    }
+    
 }
