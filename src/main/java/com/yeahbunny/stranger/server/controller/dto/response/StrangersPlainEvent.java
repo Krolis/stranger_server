@@ -10,6 +10,7 @@ public class StrangersPlainEvent {
     private LatLng position;
     private String title;
     private String details;
+    private String place;
     private GregorianCalendar date;
 
     public StrangersPlainEvent() {
@@ -22,6 +23,7 @@ public class StrangersPlainEvent {
     	this.position = new LatLng(event.getLatitude(), event.getLongitude());
     	this.title = event.getTitle();
     	this.details = event.getDetails();
+    	this.place = event.getPlace();
     	this.date.setTime(event.getDateStart());
     	this.type = event.checkEventType();
     }
@@ -73,4 +75,14 @@ public class StrangersPlainEvent {
     public void setDate(GregorianCalendar date) {
         this.date = date;
     }
+
+	public String getPlace() {
+		return place;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
+	}
+    
+    
 }

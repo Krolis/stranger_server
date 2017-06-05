@@ -24,7 +24,7 @@ public class StrangersEventListItem {
     	this();
     	this.id = event.getIdEvent();
     	this.title = event.getTitle();
-    	this.where = "NOT IMPLEMENTED"; // TODO - do dodania
+    	this.where = event.getPlace();
     	this.date.setTime(event.getDateStart());
         this.unreadMsg = unreadMsg;
     }

@@ -16,6 +16,7 @@ public class StrangersEvent {
     private LatLng position;
     private String title;
     private String details;
+    private String place;
     private GregorianCalendar date;
     private List<StrangerUser> attenders;
     private List<StrangerEventMessage> messages;
@@ -35,6 +36,7 @@ public class StrangersEvent {
     	this.position = new LatLng(event.getLatitude(), event.getLongitude());
     	this.title = event.getTitle();
     	this.details = event.getDetails();
+    	this.place = event.getPlace();
     	this.date.setTime(event.getDateStart());
     	this.type = event.checkEventType();
     	for (EventAttender evAttender : event.getEventAttenders()) {
@@ -45,7 +47,6 @@ public class StrangersEvent {
     	}
     	this.owner = new StrangerUser(event.getCreator());
     	this.usEvRelation = usEvRelation;
-    	// TODO - where
     }
     
     public Long getId() {
@@ -134,6 +135,14 @@ public class StrangersEvent {
 
 	public void setUsEvRelation(UserEventRelation usEvRelation) {
 		this.usEvRelation = usEvRelation;
+	}
+
+	public String getPlace() {
+		return place;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
 	}
     
 }

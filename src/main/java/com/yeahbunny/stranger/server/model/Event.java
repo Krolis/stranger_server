@@ -59,6 +59,9 @@ public class Event implements Serializable {
 	
 	@Column(name="details")
 	private String details;
+	
+	@Column(name="place")
+	private String place;
 
 	@Column(name = "unread_msg")
 	private int unreadedMessages;
@@ -269,6 +272,14 @@ public class Event implements Serializable {
 
 	public void setMaxAttenders(int maxAttenders) {
 		this.maxAttenders = maxAttenders;
+	}
+
+	public String getPlace() {
+		return place;
+	}
+
+	public void setPlace(String place) {
+		this.place = place;
 	}
 	
 	
