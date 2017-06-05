@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -97,9 +98,16 @@ public class Event implements Serializable {
 	
 	@Transient
 	public EventAttender getEventAttender(User user) {
-		if (getEventAttenders() != null)
-			return getEventAttenders().stream().filter(evAt -> evAt.getUser().equals(user)).findFirst().get();
-		else return null;
+		if (getEventAttenders() != null){
+			Optional<EventAttender> optional = getEventAttenders().stream().filter(evAt -> evAt.getUser().equals(user)).findFirst();
+			if(optional.isPresent()){
+				return optional.get();
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
 	}
 
 	public Long getIdEvent() {

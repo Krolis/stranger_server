@@ -42,6 +42,8 @@ public class PhotoUploadController {
         String photoUrl = photoService.saveFile(photo, userId);
         User user = userService.findUserById(userId);
         user.setPhotoUrl(photoUrl);
+        userService.updateUser(user);
+
         return ResponseEntity.ok(photoUrl);
     }
 }

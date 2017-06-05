@@ -17,4 +17,6 @@ public interface UserService {
 	User findUserByUsernameEagerily(String username);
 
 	User findUserByUsernameWithOwnEvents(String username);
+
+	User updateUser(User user);
 }

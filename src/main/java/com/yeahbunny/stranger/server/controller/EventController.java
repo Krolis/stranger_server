@@ -39,13 +39,6 @@ public class EventController {
 	@Inject 
 	EventAttenderService eventAttenderService;
 
-	// TODO - to remove
-    @RequestMapping(value = "/event", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<StrangersEvent> getEventOld(@RequestParam long id){
-    	return getEvent(id);
-    }
-    
     @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<StrangersEvent> getEvent(@PathVariable long eventId){
