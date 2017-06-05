@@ -1,27 +1,34 @@
 package com.yeahbunny.stranger.server.controller;
 
 
-import com.yeahbunny.stranger.server.controller.dto.response.LoginResponse;
-import com.yeahbunny.stranger.server.controller.dto.request.LoginRequest;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import com.yeahbunny.stranger.server.controller.dto.request.LoginRequest;
+import com.yeahbunny.stranger.server.controller.dto.response.LoginResponse;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/user/session")
@@ -48,6 +55,7 @@ public class UserSessionController {
         SecurityContextHolder.getContext().setAuthentication(a);
         LoginResponse response = new LoginResponse();
         response.setToken(RequestContextHolder.currentRequestAttributes().getSessionId());
+        System.out.println("Date:" + new Date());
         return response;
     }
 

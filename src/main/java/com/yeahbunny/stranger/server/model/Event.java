@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -74,7 +76,8 @@ public class Event implements Serializable {
 
 	//bi-directional many-to-one association to EventMessage
 	@OneToMany(mappedBy="event")
-	private Set<EventMessage> eventMessages;
+	@OrderBy("date ASC")
+	private List<EventMessage> eventMessages;
 
 	//bi-directional many-to-one association to Report
 	@OneToMany(mappedBy="event")
@@ -196,11 +199,11 @@ public class Event implements Serializable {
 		return eventAttender;
 	}
 
-	public Set<EventMessage> getEventMessages() {
+	public List<EventMessage> getEventMessages() {
 		return this.eventMessages;
 	}
 
-	public void setEventMessages(Set<EventMessage> eventMessages) {
+	public void setEventMessages(List<EventMessage> eventMessages) {
 		this.eventMessages = eventMessages;
 	}
 

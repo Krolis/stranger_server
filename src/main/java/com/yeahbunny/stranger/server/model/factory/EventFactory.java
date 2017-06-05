@@ -20,7 +20,7 @@ public class EventFactory {
         resultEvent.setDetails(addEventRequest.getDescription());
         resultEvent.setDateStart(getDateStart(addEventRequest));
         resultEvent.setDateEnd(calculateDateEnd(addEventRequest.getDateStart(), addEventRequest.getDurationHours()));
-        resultEvent.setEventMessages(Collections.emptySet());
+        resultEvent.setEventMessages(Collections.emptyList());
         resultEvent.setMaxAttenders(addEventRequest.getMaxAttenders());
         resultEvent.setCreator(user);
         resultEvent.setReports(Collections.emptySet());

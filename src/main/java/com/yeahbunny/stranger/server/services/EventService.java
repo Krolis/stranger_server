@@ -28,7 +28,7 @@ public interface EventService {
 	public Event findEventById(long eventId);
 
 	/**
-	 * 
+	 * s
 	 * @param id
 	 * @return Event with eagerly loaded children entities
 	 */

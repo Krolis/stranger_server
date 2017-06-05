@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangerEventMessage;
+import com.yeahbunny.stranger.server.controller.dto.response.UserEventRelation;
 import com.yeahbunny.stranger.server.model.Event;
 import com.yeahbunny.stranger.server.model.EventAttender;
 import com.yeahbunny.stranger.server.model.EventMessage;
@@ -20,6 +21,7 @@ import com.yeahbunny.stranger.server.repositories.EventMessageRepository;
 import com.yeahbunny.stranger.server.repositories.EventRepository;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.EventMessageService;
+import com.yeahbunny.stranger.server.services.EventService;
 
 @Repository
 @Transactional
@@ -50,7 +52,8 @@ public class EventMessageServiceImpl implements EventMessageService {
 		eventMessageRepo.save(message);
 
 		unreadedComments = findUserUnreadedComments(user, event);
-		refreshUnreadCommentsTimestamp(user, event);
+		
+		refreshUnreadCommentsTimestamp(user, event, getUserEventRelation(user, event));
 		return unreadedComments;
 	}
 
@@ -67,15 +70,27 @@ public class EventMessageServiceImpl implements EventMessageService {
 	}
 
 	@Override
-	public void refreshUnreadCommentsTimestamp(User user, Event event) {
-		if (user.getEvents() != null && user.getEvents().contains(event)) {
+	public void refreshUnreadCommentsTimestamp(User user, Event event, UserEventRelation usEvRelation) {
+		if (usEvRelation == UserEventRelation.OWNER) {
 			event.setReadMessageTimestamp(new Date());
 			eventRepo.save(event);
-		} else {
+		} else if (usEvRelation == UserEventRelation.ATTENDER) {
 			EventAttender evAtt = event.getEventAttender(user);
 			evAtt.setReadMessageTimestamp(new Date());
 			eventAttenderRepo.save(evAtt);
 		}
+	}
+	
+	// TODO - nadmiarowy kod - to samo w eventService - wydzielić w inne miejsce
+	private UserEventRelation getUserEventRelation(User user, Event event) {
+		UserEventRelation usEvRelation;
+		if (user.getEvents().contains(event))
+			usEvRelation = UserEventRelation.OWNER;
+		else if(user.getEventAttenders().stream().anyMatch(evAt -> evAt.getEvent().equals(event)))
+			usEvRelation = UserEventRelation.ATTENDER;
+		else
+			usEvRelation = UserEventRelation.STRANGER;
+		return usEvRelation;
 	}
 
 }
