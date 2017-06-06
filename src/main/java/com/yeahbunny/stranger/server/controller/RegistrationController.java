@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Controller
-public class RegistriationController {
+public class RegistrationController {
 	
 	@Inject
 	UserService userService;
