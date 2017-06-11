@@ -16,10 +16,10 @@ import com.yeahbunny.stranger.server.utils.AuthUtils;
 
 @Controller
 public class NotificationController {
-	
+
 	@Inject
 	NotificationService notificationService;
-	
+
 	@RequestMapping(value = "/user/notifications", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<NotificationResponse> getMyEvents() {
