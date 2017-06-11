@@ -3,6 +3,7 @@ package com.yeahbunny.stranger.server.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -57,7 +59,8 @@ public class User implements Serializable {
 
 	//bi-directional many-to-one association to Event
 	@OneToMany(mappedBy="creator")
-	private Set<Event> events;
+	@OrderBy("dateStart ASC")
+	private List<Event> events;
 
 	//bi-directional many-to-one association to EventAttender
 	@OneToMany(mappedBy="user")
@@ -151,11 +154,11 @@ public class User implements Serializable {
 		this.photoUrl = photoUrl;
 	}
 
-	public Set<Event> getEvents() {
+	public List<Event> getEvents() {
 		return this.events;
 	}
 
-	public void setEvents(Set<Event> events) {
+	public void setEvents(List<Event> events) {
 		this.events = events;
 	}
 

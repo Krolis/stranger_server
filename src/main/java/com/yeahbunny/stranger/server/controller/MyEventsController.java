@@ -1,12 +1,12 @@
 package com.yeahbunny.stranger.server.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 
-import com.yeahbunny.stranger.server.model.EventAttender;
-import com.yeahbunny.stranger.server.model.EventAttenderPK;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,22 +24,24 @@ import com.yeahbunny.stranger.server.utils.AuthUtils;
  */
 @Controller
 public class MyEventsController {
-	
+
 	@Inject
 	EventService eventService;
 
 	@RequestMapping(value = "/user/myEvents", method = RequestMethod.GET)
 	@ResponseBody
-    @PreAuthorize("isAuthenticated()")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<List<StrangersEventListItem>> getMyEvents() {
 		String username = AuthUtils.getAuthenticatedUserUsername();
-		List<Event> myEvents = eventService.findEventsCreatedByUser(username);
-		List<StrangersEventListItem> responseEvents = new ArrayList<>();
-
-		for(Event myEvent : myEvents) {
-			responseEvents.add(new StrangersEventListItem(myEvent,myEvent.getUnreadedMessages()));
+		List<StrangersEventListItem> responseEvents = null;
+		try {
+			// TODO - mapowanie w service
+			List<Event> myEvents = eventService.findEventsCreatedByUser(username);
+			responseEvents = myEvents.stream().map(ev -> new StrangersEventListItem(ev, ev.getUnreadedMessages()))
+					.collect(Collectors.toList());
+		} catch (EntityNotFoundException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
-
 		return ResponseEntity.ok(responseEvents);
 	}
 }

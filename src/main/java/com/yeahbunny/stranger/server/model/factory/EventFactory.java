@@ -18,7 +18,7 @@ public class EventFactory {
         resultEvent.setLatitude(addEventRequest.getLatitude());
         resultEvent.setTitle(addEventRequest.getTitle());
         resultEvent.setDetails(addEventRequest.getDescription());
-        resultEvent.setDetails(addEventRequest.getPlace());
+        resultEvent.setPlace(addEventRequest.getPlace());
         resultEvent.setDateStart(getDateStart(addEventRequest));
         resultEvent.setDateEnd(calculateDateEnd(addEventRequest.getDateStart(), addEventRequest.getDurationHours()));
         resultEvent.setEventMessages(Collections.emptyList());

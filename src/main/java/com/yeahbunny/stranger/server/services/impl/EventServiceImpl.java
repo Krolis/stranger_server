@@ -67,9 +67,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public List<Event> findEventsCreatedByUser(String username) {
 		User creator = userRepo.findByUsername(username);
-		List<Event> events = new ArrayList<>();
-		events.addAll(creator.getEvents());
-		return events;
+		return creator.getEvents();
 	}
 
 	@Override
