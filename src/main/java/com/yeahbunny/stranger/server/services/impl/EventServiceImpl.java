@@ -108,9 +108,8 @@ public class EventServiceImpl implements EventService {
 		User user = null;
 		if((event = findEventByIdEagerly(id)) == null || (user = userRepo.findByUsername(username)) == null)
 			throw new EntityNotFoundException();
-		eventMessageService.refreshUnreadCommentsTimestamp(user, event);
-		
 		UserEventRelation usEvRelation = getUserEventRelation(user, event);
+		eventMessageService.refreshUnreadCommentsTimestamp(user, event, usEvRelation);
 		return new StrangersEvent(event, usEvRelation);
 	}
 

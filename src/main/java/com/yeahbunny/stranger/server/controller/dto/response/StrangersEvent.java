@@ -35,6 +35,7 @@ public class StrangersEvent {
     	this.position = new LatLng(event.getLatitude(), event.getLongitude());
     	this.title = event.getTitle();
     	this.details = event.getDetails();
+    	this.where = event.getPlace();
     	this.date.setTime(event.getDateStart());
     	this.type = event.checkEventType();
     	for (EventAttender evAttender : event.getEventAttenders()) {
@@ -45,7 +46,6 @@ public class StrangersEvent {
     	}
     	this.owner = new StrangerUser(event.getCreator());
     	this.usEvRelation = usEvRelation;
-    	// TODO - where
     }
     
     public Long getId() {
