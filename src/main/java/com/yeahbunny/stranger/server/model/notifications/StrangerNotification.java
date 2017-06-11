@@ -4,10 +4,13 @@ package com.yeahbunny.stranger.server.model.notifications;
  * Created by kroli on 02.06.2017.
  */
 
-public class StrangerNotification<T extends NotificationContent> {
+public class StrangerNotification implements NotificationContent{
     private NotificationType notificationType;
-    private T notificationContent;
+    private String title;
+    private String content;
+    private Long itemId;
 
+    @Override
     public NotificationType getNotificationType() {
         return notificationType;
     }
@@ -16,15 +19,30 @@ public class StrangerNotification<T extends NotificationContent> {
         this.notificationType = notificationType;
     }
 
-    public T getNotificationContent() {
-        return notificationContent;
+    @Override
+    public String getTitle() {
+        return title;
     }
 
-    public void setNotificationContent(T notificationContent) {
-        this.notificationContent = notificationContent;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public int getNotificationId() {
-        return 0;
+    @Override
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 }

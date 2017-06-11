@@ -3,6 +3,7 @@ package com.yeahbunny.stranger.server.controller;
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 
+import com.yeahbunny.stranger.server.model.notifications.StrangerNotification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import com.yeahbunny.stranger.server.controller.dto.response.NotificationRespons
 import com.yeahbunny.stranger.server.services.NotificationService;
 import com.yeahbunny.stranger.server.utils.AuthUtils;
 
+import java.util.List;
+
 @Controller
 public class NotificationController {
 
@@ -22,14 +25,14 @@ public class NotificationController {
 
 	@RequestMapping(value = "/user/notifications", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<NotificationResponse> getMyEvents() {
+	public ResponseEntity<List<StrangerNotification>> getMyEvents() {
 		String username = AuthUtils.getAuthenticatedUserUsername();
-		NotificationResponse notification = null;
+        List<StrangerNotification> notifications = null;
 		try {
-			notification = notificationService.findNotificationsByUsername(username);
+			notifications = notificationService.findNotificationsByUsername(username);
 		} catch (EntityNotFoundException ex) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
-		return ResponseEntity.ok(notification);
+		return ResponseEntity.ok(notifications);
 	}
 }

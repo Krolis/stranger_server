@@ -6,6 +6,8 @@ package com.yeahbunny.stranger.server.model.notifications;
 
 public interface NotificationContent {
 
+    public NotificationType getNotificationType();
     public String getTitle();
     public String getContent();
+    public Long getItemId();
 }
