@@ -1,6 +1,7 @@
 package com.yeahbunny.stranger.server.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
-import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.repositories.EventRepository;
 import com.yeahbunny.stranger.server.services.EventAttenderService;
 import com.yeahbunny.stranger.server.services.EventService;
 import com.yeahbunny.stranger.server.services.UserService;
@@ -32,6 +33,9 @@ public class EventController {
 	
 	@Inject
 	EventService eventService;
+	
+	@Inject
+	EventRepository eventRepo;
 	
 	@Inject
 	UserService userService;
@@ -101,16 +105,16 @@ public class EventController {
     public ResponseEntity<List<StrangersPlainEvent>> getEvents(@RequestParam double northeast_lat,
                                                 @RequestParam double northeast_lng,
                                                 @RequestParam double southwest_lat,
-                                                @RequestParam double southwest_lng){
-    	// TODO - obsługa parametrów
+                                                @RequestParam double southwest_lng) {
+    	
         List<StrangersPlainEvent> plainEvents = new ArrayList<>();
 
-        List<Event> modelEvents = eventService.findAllEventsLazy();
+        System.out.println("Current TimeStamp: " + eventRepo.dateTest() + " " + eventRepo.dateTest().getClass());
+        System.out.println("Current date: " + new Date());
         
-        for (Event event : modelEvents) {
-        	plainEvents.add(new StrangersPlainEvent(event));
-        }
-
+        eventService.findAllEventsLazy().stream().peek(ev -> System.out.println(ev));
+        
+        plainEvents = eventService.findAllActiveEvents();
         return ResponseEntity.ok(plainEvents);
     }
     

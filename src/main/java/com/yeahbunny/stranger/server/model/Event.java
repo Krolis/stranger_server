@@ -270,6 +270,11 @@ public class Event implements Serializable {
 		this.readMessageTimestamp = readMessageTimestamp;
 	}
 
+	@Override
+	public String toString() {
+		return "Event [idEvent=" + idEvent + ", dateEnd=" + dateEnd + ", dateStart=" + dateStart + "]";
+	}
+
 	public void setMaxAttenders(int maxAttenders) {
 		this.maxAttenders = maxAttenders;
 	}

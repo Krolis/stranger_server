@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersPlainEvent;
 import com.yeahbunny.stranger.server.controller.dto.response.UserEventRelation;
 import com.yeahbunny.stranger.server.model.Event;
 import com.yeahbunny.stranger.server.model.User;
@@ -89,18 +90,7 @@ public class EventServiceImpl implements EventService {
 		Event saved = eventRepo.save(event);
 		return saved.getIdEvent();
 	}
-
-	private UserEventRelation getUserEventRelation(User user, Event event) {
-		UserEventRelation usEvRelation;
-		if (user.getIdUser().equals(event.getCreator().getIdUser()))
-			usEvRelation = UserEventRelation.OWNER;
-		else if(user.getEventAttenders().stream().anyMatch(evAt -> evAt.getEvent().equals(event)))
-			usEvRelation = UserEventRelation.ATTENDER;
-		else
-			usEvRelation = UserEventRelation.STRANGER;
-		return usEvRelation;
-	}
-
+	
 	@Override
 	public StrangersEvent findUserStrangerEventAndRefreshTimestamp(long id, String username)
 			throws EntityNotFoundException {
@@ -111,6 +101,24 @@ public class EventServiceImpl implements EventService {
 		UserEventRelation usEvRelation = getUserEventRelation(user, event);
 		eventMessageService.refreshUnreadCommentsTimestamp(user, event, usEvRelation);
 		return new StrangersEvent(event, usEvRelation);
+	}
+
+	@Override
+	public List<StrangersPlainEvent> findAllActiveEvents() {
+		List<StrangersPlainEvent> activeEvents;
+		activeEvents = eventRepo.findAllActive().stream().map(ev -> new StrangersPlainEvent(ev)).collect(Collectors.toList());
+		return activeEvents;
+	}
+
+	private UserEventRelation getUserEventRelation(User user, Event event) {
+		UserEventRelation usEvRelation;
+		if (user.getIdUser().equals(event.getCreator().getIdUser()))
+			usEvRelation = UserEventRelation.OWNER;
+		else if(user.getEventAttenders().stream().anyMatch(evAt -> evAt.getEvent().equals(event)))
+			usEvRelation = UserEventRelation.ATTENDER;
+		else
+			usEvRelation = UserEventRelation.STRANGER;
+		return usEvRelation;
 	}
 
 }
