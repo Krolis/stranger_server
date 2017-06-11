@@ -1,13 +1,12 @@
 package com.yeahbunny.stranger.server.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
@@ -20,7 +19,7 @@ import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.EventMessageService;
 import com.yeahbunny.stranger.server.services.EventService;
 
-@Repository
+@Service
 @Transactional
 public class EventServiceImpl implements EventService {
 	

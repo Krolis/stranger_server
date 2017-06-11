@@ -3,9 +3,7 @@ package com.yeahbunny.stranger.server.services.impl;
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.exception.EventAttenderExistsException;
@@ -16,9 +14,8 @@ import com.yeahbunny.stranger.server.repositories.EventAttenderRepository;
 import com.yeahbunny.stranger.server.services.EventAttenderService;
 import com.yeahbunny.stranger.server.services.EventService;
 import com.yeahbunny.stranger.server.services.UserService;
-import com.yeahbunny.stranger.server.utils.AuthUtils;
 
-@Repository
+@Service
 @Transactional
 public class EventAttenderServiceImpl implements EventAttenderService {
 

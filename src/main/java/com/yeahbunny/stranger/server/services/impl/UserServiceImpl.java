@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.exception.UserExistsException;
@@ -14,7 +14,7 @@ import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.UserService;
 
-@Repository
+@Service
 @Transactional
 public class UserServiceImpl implements UserService {
 

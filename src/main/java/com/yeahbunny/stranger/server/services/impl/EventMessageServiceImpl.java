@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yeahbunny.stranger.server.controller.dto.response.StrangerEventMessage;
@@ -21,9 +21,8 @@ import com.yeahbunny.stranger.server.repositories.EventMessageRepository;
 import com.yeahbunny.stranger.server.repositories.EventRepository;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.EventMessageService;
-import com.yeahbunny.stranger.server.services.EventService;
 
-@Repository
+@Service
 @Transactional
 public class EventMessageServiceImpl implements EventMessageService {
 
