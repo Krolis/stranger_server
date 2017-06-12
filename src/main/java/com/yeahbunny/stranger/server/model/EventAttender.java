@@ -27,6 +27,8 @@ public class EventAttender implements Serializable {
 	private EventAttenderPK id;
 
 	private String confirmed;
+	
+	private String consumed;
 
 	@Column(name="rating")
 	private Integer rating;
@@ -103,6 +105,14 @@ public class EventAttender implements Serializable {
 
 	public void setReadMessageTimestamp(Date readMessageTimestamp) {
 		this.readMessageTimestamp = readMessageTimestamp;
+	}
+
+	public String getConsumed() {
+		return consumed;
+	}
+
+	public void setConsumed(String consumed) {
+		this.consumed = consumed;
 	}
 	
 }

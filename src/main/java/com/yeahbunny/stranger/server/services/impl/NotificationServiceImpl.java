@@ -2,6 +2,7 @@ package com.yeahbunny.stranger.server.services.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,8 @@ import com.yeahbunny.stranger.server.model.EventMessage;
 import com.yeahbunny.stranger.server.model.User;
 import com.yeahbunny.stranger.server.model.notifications.NotificationType;
 import com.yeahbunny.stranger.server.model.notifications.StrangerNotification;
+import com.yeahbunny.stranger.server.repositories.EventAttenderRepository;
+import com.yeahbunny.stranger.server.repositories.EventRepository;
 import com.yeahbunny.stranger.server.repositories.UserRepository;
 import com.yeahbunny.stranger.server.services.NotificationService;
 
@@ -29,33 +32,61 @@ public class NotificationServiceImpl implements NotificationService {
 	@Inject
 	UserRepository userRepo;
 
+	@Inject
+	EventRepository eventRepo;
+
+	@Inject
+	EventAttenderRepository eventAtRepo;
+
 	@Override
 	public List<StrangerNotification> findNotificationsByUsername(String username) throws EntityNotFoundException {
 		List<StrangerNotification> resultNotifications = new ArrayList<>();
 		User user = userRepo.findByUsername(username);
-		// TODO - pobranie moich eventów i eventów w których uczestniczę z
-		// obiektu usera i przekształcenie ich na odpowiednie obiekty:
+
 		List<Event> myEventsWithNewMsgs = filterMyEventsWithNewMsgs(user.getEvents());
-		List<Event> attendEventsWithNewMsgs = filterAttendedEventsWithNewMsgs(user.getEventAttenders());
-		Set<EventAttender> newAttendersOnMyEvent = user.getEventAttenders();// a
-																			// to
-																			// narazie
-																			// tak
-																			// zostawmy
+		List<EventAttender> eventAttendersWithNewMsgs = filterAttendedEventsWithNewMsgs(user.getEventAttenders());
+		List<Event> attendEventsWithNewMsgs = eventAttendersWithNewMsgs.stream().map(evAt -> evAt.getEvent())
+				.collect(Collectors.toList());
+		Set<EventAttender> newAttendersOnMyEvent = filterMyEventsAttenders(user.getEvents());
 
 		myEventsMsgsNotification(resultNotifications, myEventsWithNewMsgs);
 		attendEventsMsgsNotification(resultNotifications, attendEventsWithNewMsgs);
 		newAttendersInMyEventsNotification(resultNotifications, newAttendersOnMyEvent);
 
+		refreshEventsTimestamp(myEventsWithNewMsgs);
+		refreshEventAttendersTimestamps(newAttendersOnMyEvent);
+		refreshEventAttendersConsumed(eventAttendersWithNewMsgs);
+		
 		return resultNotifications;
 	}
 
-	private List<Event> filterAttendedEventsWithNewMsgs(Set<EventAttender> eventAttenders) {
+	private void refreshEventAttendersConsumed(List<EventAttender> eventAttendersWithNewMsgs) {
+		Date curDate = new Date();
+		eventAttendersWithNewMsgs.stream().forEach(evAt -> evAt.setReadMessageTimestamp(curDate));
+	}
+
+	private void refreshEventAttendersTimestamps(Set<EventAttender> newAttendersOnMyEvent) {
+		newAttendersOnMyEvent.stream().forEach(evAt -> evAt.setConsumed("T"));
+	}
+
+	private void refreshEventsTimestamp(List<Event> myEventsWithNewMsgs) {
+		Date curDate = new Date();
+		myEventsWithNewMsgs.stream().forEach(ev -> ev.setReadMessageTimestamp(curDate));
+	}
+
+	private Set<EventAttender> filterMyEventsAttenders(List<Event> events) {
+		Set<EventAttender> eventsAttenders = new HashSet<>();
+		events.stream().forEach(ev -> ev.getEventAttenders().stream().filter(evAt -> "F".equals(evAt.getConsumed()))
+				.forEach(evAt -> eventsAttenders.add(evAt)));
+		return eventsAttenders;
+	}
+
+	private List<EventAttender> filterAttendedEventsWithNewMsgs(Set<EventAttender> eventAttenders) {
 		return eventAttenders.stream()
 				.filter(evAt -> getLastEventMessage(evAt.getEvent().getEventMessages()) != null
 						&& getLastEventMessage(evAt.getEvent().getEventMessages()).getDate()
 								.after(evAt.getReadMessageTimestamp()))
-				.map(evAt -> evAt.getEvent()).collect(Collectors.toList());
+				.collect(Collectors.toList());
 	}
 
 	private List<Event> filterMyEventsWithNewMsgs(List<Event> events) {
