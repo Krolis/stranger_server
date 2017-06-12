@@ -57,6 +57,7 @@ public class EventAttender implements Serializable {
 		this.id = new EventAttenderPK(event.getIdEvent(), user.getIdUser());
 		this.event = event;
 		this.user = user;
+		this.consumed = "F";
 	}
 
 	public EventAttenderPK getId() {
