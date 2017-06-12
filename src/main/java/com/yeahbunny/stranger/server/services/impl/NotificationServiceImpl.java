@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 
+import com.yeahbunny.stranger.server.controller.dto.response.StrangersEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,7 +104,16 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	private void newAttendersInMyEventsNotification(List<StrangerNotification> resultNotifications,
-			Set<EventAttender> events) {
+			Set<EventAttender> eventAttenders) {
+
+		if (eventAttenders.size() == 0) {
+			return;
+		}else if(eventAttenders.size() == 1){
+			resultNotifications.add(oneEventNewAttendersNotification(eventAttenders.iterator().next()));
+		}else {
+			resultNotifications.add(fewEventNewAttendersNotification(eventAttenders));
+		}
+
 	}
 
 	private void attendEventsMsgsNotification(List<StrangerNotification> resultNotifications, List<Event> events) {
@@ -151,6 +161,27 @@ public class NotificationServiceImpl implements NotificationService {
 		return notification;
 	}
 
+	private StrangerNotification oneEventNewAttendersNotification(EventAttender eventAttender) {
+		StrangerNotification notification = new StrangerNotification();
+		notification.setNotificationType(NotificationType.NEW_ONE_MY_EVENT_ATTENDERS);
+		notification.setTitle(eventAttender.getEvent().getTitle());
+		notification.setContent(eventAttender.getUser().getLogin());
+		notification.setItemId(eventAttender.getEvent().getIdEvent());
+		return notification;
+	}
+
+	private StrangerNotification fewEventNewAttendersNotification(Set<EventAttender> eventAttenders) {
+		StrangerNotification notification = new StrangerNotification();
+		notification.setNotificationType(NotificationType.NEW_FEW_MY_EVENT_ATTENDERS);
+		List<User> events = eventAttenders
+				.stream()
+				.map(item -> {return item.getUser();})
+				.collect(Collectors.toList());
+		notification.setContent(contentByUsersNames(events));
+
+		return notification;
+	}
+
 	private String contentByEventsNames(List<Event> events) {
 		StringBuilder stringBuilder = new StringBuilder();
 		Iterator<Event> iterator = events.iterator();
@@ -158,6 +189,18 @@ public class NotificationServiceImpl implements NotificationService {
 		while (iterator.hasNext()) {
 			stringBuilder.append(", ");
 			stringBuilder.append(iterator.next().getTitle());
+		}
+
+		return stringBuilder.toString();
+	}
+
+	private String contentByUsersNames(List<User> users) {
+		StringBuilder stringBuilder = new StringBuilder();
+		Iterator<User> iterator = users.iterator();
+		stringBuilder.append(iterator.next().getLogin());
+		while (iterator.hasNext()) {
+			stringBuilder.append(", ");
+			stringBuilder.append(iterator.next().getLogin());
 		}
 
 		return stringBuilder.toString();
