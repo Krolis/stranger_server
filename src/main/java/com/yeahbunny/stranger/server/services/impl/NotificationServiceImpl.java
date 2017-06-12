@@ -1,23 +1,26 @@
 package com.yeahbunny.stranger.server.services.impl;
 
-import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-
-import com.yeahbunny.stranger.server.model.Event;
-import com.yeahbunny.stranger.server.model.EventAttender;
-import com.yeahbunny.stranger.server.model.notifications.NotificationType;
-import com.yeahbunny.stranger.server.model.notifications.StrangerNotification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.yeahbunny.stranger.server.model.User;
-import com.yeahbunny.stranger.server.repositories.UserRepository;
-import com.yeahbunny.stranger.server.services.NotificationService;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.yeahbunny.stranger.server.model.Event;
+import com.yeahbunny.stranger.server.model.EventAttender;
+import com.yeahbunny.stranger.server.model.EventMessage;
+import com.yeahbunny.stranger.server.model.User;
+import com.yeahbunny.stranger.server.model.notifications.NotificationType;
+import com.yeahbunny.stranger.server.model.notifications.StrangerNotification;
+import com.yeahbunny.stranger.server.repositories.UserRepository;
+import com.yeahbunny.stranger.server.services.NotificationService;
 
 @Service
 @Transactional
@@ -25,16 +28,20 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Inject
 	UserRepository userRepo;
-	
+
 	@Override
 	public List<StrangerNotification> findNotificationsByUsername(String username) throws EntityNotFoundException {
 		List<StrangerNotification> resultNotifications = new ArrayList<>();
 		User user = userRepo.findByUsername(username);
-		// TODO - pobranie moich eventów i eventów w których uczestniczę z obiektu usera i przekształcenie ich na odpowiednie obiekty:
-		List<Event> myEventsWithNewMsgs = user.getEvents();//to potrzeba
-		List<Event> attendEventsWithNewMsgs = user.getEvents();//i to
-		Set<EventAttender> newAttendersOnMyEvent = user.getEventAttenders();// a to narazie tak zostawmy
-
+		// TODO - pobranie moich eventów i eventów w których uczestniczę z
+		// obiektu usera i przekształcenie ich na odpowiednie obiekty:
+		List<Event> myEventsWithNewMsgs = filterMyEventsWithNewMsgs(user.getEvents());
+		List<Event> attendEventsWithNewMsgs = filterAttendedEventsWithNewMsgs(user.getEventAttenders());
+		Set<EventAttender> newAttendersOnMyEvent = user.getEventAttenders();// a
+																			// to
+																			// narazie
+																			// tak
+																			// zostawmy
 
 		myEventsMsgsNotification(resultNotifications, myEventsWithNewMsgs);
 		attendEventsMsgsNotification(resultNotifications, attendEventsWithNewMsgs);
@@ -43,28 +50,50 @@ public class NotificationServiceImpl implements NotificationService {
 		return resultNotifications;
 	}
 
-	private void newAttendersInMyEventsNotification(List<StrangerNotification> resultNotifications, Set<EventAttender> events) {
+	private List<Event> filterAttendedEventsWithNewMsgs(Set<EventAttender> eventAttenders) {
+		return eventAttenders.stream()
+				.filter(evAt -> getLastEventMessage(evAt.getEvent().getEventMessages()) != null
+						&& getLastEventMessage(evAt.getEvent().getEventMessages()).getDate()
+								.after(evAt.getReadMessageTimestamp()))
+				.map(evAt -> evAt.getEvent()).collect(Collectors.toList());
+	}
+
+	private List<Event> filterMyEventsWithNewMsgs(List<Event> events) {
+		return events.stream()
+				.filter(ev -> getLastEventMessage(ev.getEventMessages()) != null
+						&& getLastEventMessage(ev.getEventMessages()).getDate().after(ev.getReadMessageTimestamp()))
+				.collect(Collectors.toList());
+	}
+
+	private EventMessage getLastEventMessage(List<EventMessage> eventMessages) {
+		if (eventMessages != null && !eventMessages.isEmpty())
+			return eventMessages.get(eventMessages.size() - 1);
+		return null;
+	}
+
+	private void newAttendersInMyEventsNotification(List<StrangerNotification> resultNotifications,
+			Set<EventAttender> events) {
 	}
 
 	private void attendEventsMsgsNotification(List<StrangerNotification> resultNotifications, List<Event> events) {
 
-		if(events.size() == 0){
+		if (events.size() == 0) {
 			return;
-		}else if(events.size() == 1){
+		} else if (events.size() == 1) {
 			Event event = events.get(0);
 			resultNotifications.add(oneEventMsgNotification(event));
-		}else{
+		} else {
 			resultNotifications.add(fewAttendEventsMsgNotification(events));
 		}
 	}
 
 	private void myEventsMsgsNotification(List<StrangerNotification> resultNotifications, List<Event> events) {
-		if(events.size() == 0){
+		if (events.size() == 0) {
 			return;
-		}else if(events.size() == 1){
+		} else if (events.size() == 1) {
 			Event event = events.get(0);
 			resultNotifications.add(oneEventMsgNotification(event));
-		}else{
+		} else {
 			resultNotifications.add(fewMyEventsMsgNotification(events));
 		}
 	}
@@ -95,7 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
 		StringBuilder stringBuilder = new StringBuilder();
 		Iterator<Event> iterator = events.iterator();
 		stringBuilder.append(iterator.next().getTitle());
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			stringBuilder.append(", ");
 			stringBuilder.append(iterator.next().getTitle());
 		}
